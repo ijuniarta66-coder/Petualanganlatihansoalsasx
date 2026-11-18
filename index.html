@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Petualangan Dharma – PAH dan Budi Pekerti Kelas X</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3e8cf; --paper:#fffaf0; --ink:#2a1d17; --muted:#6a584b; --line:#e0cfa9;
+  --maroon:#8a2a1f; --maroon-d:#5e1a13; --gold:#c98a1b; --gold-l:#f3d58c; --jade:#21634f; --jade-l:#d9efe4;
+  --night:#241711; --ok:#1d7447; --ok-l:#d8f1e3; --bad:#b3261e; --bad-l:#fadcd9; --lock:#a89880;
+  --radius:16px; --shadow:0 6px 20px rgba(60,30,10,.12);
+  --head:'Marcellus',Georgia,'Times New Roman',serif; --body:'Nunito Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;
+  background-image:radial-gradient(circle at 20% 0%,rgba(201,138,27,.10),transparent 40%),radial-gradient(circle at 100% 40%,rgba(138,42,31,.07),transparent 40%)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+
+/* ---------- header ---------- */
+header.top{background:linear-gradient(180deg,#2b1812 0%,#5a1f16 70%,#8a2a1f 100%);color:#fbefd3;position:relative;overflow:hidden}
+header.top svg.scene{position:absolute;left:0;right:0;bottom:0;width:100%;height:100%;pointer-events:none}
+header.top .in{position:relative;padding:20px 0 26px;display:flex;gap:14px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+.brand small{display:block;letter-spacing:.18em;text-transform:uppercase;font-size:12px;color:var(--gold-l);font-weight:700}
+.brand h1{margin:2px 0 0;font:400 clamp(26px,6vw,40px)/1.1 var(--head);color:#fff3d6;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.hud{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(0,0,0,.38);border:1px solid rgba(243,213,140,.45);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:700;color:#fff3d6;white-space:nowrap}
+.chip b{color:var(--gold-l)}
+
+/* ---------- map ---------- */
+.map{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin:-16px 0 18px;position:relative;padding:18px 8px 12px}
+.map ol{list-style:none;margin:0;padding:0;display:flex;justify-content:space-between;position:relative}
+.map ol::before{content:"";position:absolute;left:10%;right:10%;top:27px;height:4px;background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 18px);border-radius:2px}
+.map li{flex:1;text-align:center;position:relative;z-index:1}
+.node{all:unset;cursor:pointer;display:block;margin:0 auto;width:100%}
+.node .dot{width:54px;height:54px;border-radius:50%;margin:0 auto;display:grid;place-items:center;font:400 22px var(--head);border:3px solid var(--lock);background:#efe5d0;color:var(--lock);transition:transform .2s,box-shadow .2s;position:relative}
+.node .lbl{display:block;font-size:12.5px;font-weight:800;margin-top:6px;color:var(--muted);line-height:1.2;padding:0 2px}
+.node .lbl em{display:block;font-style:normal;font-weight:600;font-size:11.5px;opacity:.85}
+.node.done .dot{background:var(--jade);border-color:var(--jade);color:#fff}
+.node.cur .dot{background:var(--maroon);border-color:var(--gold);color:#fff;box-shadow:0 0 0 5px rgba(201,138,27,.3);animation:pulse 2s infinite}
+.node.cur .lbl,.node.done .lbl{color:var(--ink)}
+.node.view .dot{transform:scale(1.1)}
+.node.view .lbl{text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:3px;text-underline-offset:3px}
+.node svg{width:22px;height:22px}
+.node:focus-visible .dot{outline:3px solid var(--gold);outline-offset:3px}
+.opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.classes>span{position:relative;display:block}
+.walker{position:absolute;top:-6px;left:0;width:26px;height:26px;transform:translateX(-50%);transition:left .6s ease;pointer-events:none}
+@keyframes pulse{50%{box-shadow:0 0 0 9px rgba(201,138,27,.14)}}
+@media (max-width:520px){.node .dot{width:44px;height:44px;font-size:18px}.map ol::before{top:22px}.node .lbl{font-size:11px}.node .lbl em{display:none}}
+
+/* ---------- cards ---------- */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px clamp(16px,4vw,30px);margin-bottom:18px}
+.card h2{font:400 clamp(24px,5vw,31px)/1.2 var(--head);margin:0 0 4px;color:var(--maroon-d)}
+.card h3{font:400 22px/1.25 var(--head);color:var(--maroon-d);margin:26px 0 8px}
+.card h4{margin:18px 0 4px;font-size:17px;color:var(--jade)}
+.kicker{font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.lead{color:var(--muted);margin:4px 0 16px}
+p{margin:0 0 12px}
+ul,ol.l{margin:0 0 14px;padding-left:22px}li{margin:3px 0}
+.btn{cursor:pointer;border:0;border-radius:12px;padding:13px 22px;font-weight:800;font-size:17px;background:var(--maroon);color:#fff;box-shadow:0 3px 0 var(--maroon-d);transition:transform .08s,filter .15s}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--maroon-d)}
+.btn:disabled{background:#cdbfa6;color:#7a6c58;box-shadow:none;cursor:not-allowed}
+.btn.gold{background:var(--gold);color:#2a1d17;box-shadow:0 3px 0 #8d5f0d}
+.btn.ghost{background:transparent;color:var(--maroon);box-shadow:inset 0 0 0 2px var(--maroon)}
+.btn.sm{padding:8px 14px;font-size:15px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.right{margin-left:auto}
+.callout{border-left:5px solid var(--gold);background:#fdf1d3;border-radius:0 12px 12px 0;padding:12px 16px;margin:14px 0}
+.callout.jade{border-color:var(--jade);background:var(--jade-l)}
+.callout.red{border-color:var(--maroon);background:#f9e1dc}
+.callout b.t{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.sloka{font-family:var(--head);font-size:18px;line-height:1.5;text-align:center;background:var(--night);color:#fbefd3;border-radius:12px;padding:16px 18px;margin:14px 0}
+.sloka small{display:block;font-family:var(--body);font-size:14.5px;color:var(--gold-l);margin-top:6px}
+.tblw{overflow-x:auto;margin:12px 0 16px;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px;background:#fff}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:#f4e3b9;font-weight:800;color:var(--maroon-d)}
+tr:last-child td{border-bottom:0}
+.kw{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}.kw span{background:#f4e3b9;color:var(--maroon-d);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:800}
+
+/* ---------- form ---------- */
+label.f{display:block;font-weight:800;margin:16px 0 6px}
+.inp{width:100%;border:2px solid var(--line);background:#fff;border-radius:12px;padding:12px 14px;font-size:17px}
+.inp:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3px rgba(201,138,27,.25)}
+.classes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.classes input{position:absolute;opacity:0;pointer-events:none}
+.classes label{display:block;border:2px solid var(--line);background:#fff;border-radius:12px;padding:10px 0;text-align:center;font-weight:800;cursor:pointer;transition:.15s}
+.classes input:checked+label{background:var(--maroon);border-color:var(--maroon);color:#fff;box-shadow:0 3px 0 var(--maroon-d)}
+.classes input:focus-visible+label{outline:3px solid var(--gold)}
+.err{color:var(--bad);font-weight:700;font-size:15px;min-height:22px;margin-top:8px}
+
+/* ---------- timer ---------- */
+.ring{position:relative;width:92px;height:92px;flex:none}
+.ring svg{width:100%;height:100%}
+.ring circle{fill:none;stroke-width:8}
+.ring .bg{stroke:#eadcb9}.ring .fg{stroke:var(--jade);stroke-linecap:round;transition:stroke-dashoffset .3s linear}
+.ring.warn .fg{stroke:var(--bad)}
+.ring .rt{position:absolute;inset:0;display:grid;place-content:center;text-align:center;line-height:1.1}
+.ring .rt b{font:400 21px var(--head)}.ring .rt small{font-size:10.5px;color:var(--muted);font-weight:700}
+.timerbar{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:12px 0 4px;position:sticky;top:8px;z-index:5;box-shadow:var(--shadow)}
+.timerbar .txt{flex:1;font-size:15px;color:var(--muted)}.timerbar .txt b{color:var(--ink)}
+.timerbar .ring{width:72px;height:72px}.timerbar .ring .rt b{font-size:17px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+.tab{cursor:pointer;border:2px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-weight:800;font-size:15px;color:var(--muted)}
+.tab[aria-selected=true]{background:var(--night);border-color:var(--night);color:#fbefd3}
+.tab.seen::after{content:" ✓";color:var(--jade)}.tab[aria-selected=true].seen::after{color:var(--gold-l)}
+
+/* ---------- quiz ---------- */
+.qhead{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.dots{display:flex;gap:5px;flex-wrap:wrap}.dots i{width:14px;height:14px;border-radius:50%;background:#e9dcbc;display:block}
+.dots i.ok{background:var(--ok)}.dots i.bad{background:var(--bad)}.dots i.cur{background:var(--gold);box-shadow:0 0 0 3px rgba(201,138,27,.35)}
+.qtext{font-size:18.5px;font-weight:600;white-space:pre-line;margin:6px 0 16px}
+.opts{display:grid;gap:10px}
+.opt{all:unset;box-sizing:border-box;cursor:pointer;display:flex;gap:12px;align-items:flex-start;width:100%;background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px;transition:.12s;font-size:17px;line-height:1.45}
+.opt:hover:not([disabled]){border-color:var(--gold);background:#fffbef}
+.opt .ltr{flex:none;width:32px;height:32px;border-radius:50%;background:#f1e4c3;display:grid;place-items:center;font-weight:800;color:var(--maroon-d);margin-top:1px}
+.opt.sel{border-color:var(--maroon);background:#fbeee8}.opt.sel .ltr{background:var(--maroon);color:#fff}
+.opt.multi .ltr{border-radius:8px}
+.opt.ok{border-color:var(--ok);background:var(--ok-l)}.opt.ok .ltr{background:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:var(--bad-l)}.opt.bad .ltr{background:var(--bad);color:#fff}
+.opt[disabled]{cursor:default}
+.fb{margin-top:14px;padding:12px 16px;border-radius:12px;font-weight:700}
+.fb.ok{background:var(--ok-l);color:#0f4a2c}.fb.bad{background:var(--bad-l);color:#7c1a14}
+.hint{font-size:14px;color:var(--muted);font-weight:700;margin:-6px 0 12px}
+.navgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px;margin:16px 0 4px}
+.navgrid button{cursor:pointer;border:2px solid var(--line);background:#fff;border-radius:10px;padding:7px 0;font-weight:800;font-size:15px}
+.navgrid button.ans{background:var(--jade-l);border-color:var(--jade)}
+.navgrid button.cur{border-color:var(--maroon);background:var(--maroon);color:#fff}
+.sect{font-size:13px;letter-spacing:.12em;font-weight:800;text-transform:uppercase;color:var(--jade);margin-bottom:4px}
+
+/* ---------- scenarios ---------- */
+.sc{border:2px solid var(--line);border-radius:14px;background:#fff;margin:14px 0;overflow:hidden}
+.sc.done{border-color:var(--jade)}
+.sc .hd{display:flex;gap:12px;align-items:center;padding:12px 16px;background:#f9edcd;font-weight:800;color:var(--maroon-d)}
+.sc.done .hd{background:var(--jade-l)}
+.sc .hd .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--maroon);color:#fff;display:grid;place-items:center;font-size:15px}
+.sc.done .hd .n{background:var(--jade)}
+.sc .bd{padding:14px 16px}
+.sc .opt{margin-top:8px;font-size:16px}
+.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.tagrow span{background:#efe3c3;border-radius:8px;padding:2px 9px;font-size:13px;font-weight:800;color:var(--maroon-d)}
+textarea.inp{min-height:110px;resize:vertical}
+
+/* ---------- result ---------- */
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0}
+.score div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+.score b{display:block;font:400 34px/1.1 var(--head);color:var(--maroon-d)}.score span{font-size:13.5px;color:var(--muted);font-weight:700}
+.badge{text-align:center;padding:20px;border-radius:16px;background:linear-gradient(135deg,#2b1812,#6a2318);color:#fbefd3;margin:10px 0 16px}
+.badge .t{font:400 30px var(--head);color:var(--gold-l)}
+.status{border-radius:12px;padding:12px 16px;font-weight:700;margin:12px 0}
+.status.ok{background:var(--ok-l);color:#0f4a2c}.status.wait{background:#fdf1d3;color:#6a4a07}.status.bad{background:var(--bad-l);color:#7c1a14}
+details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0}
+summary{cursor:pointer;font-weight:800}
+.rev{font-size:15px;margin:8px 0 12px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.rev .a{color:var(--bad);font-weight:700}.rev .k{color:var(--ok);font-weight:700}
+
+/* ---------- overlay & toast ---------- */
+.ov{position:fixed;inset:0;background:rgba(36,23,17,.6);display:grid;place-items:center;z-index:50;padding:16px}
+.ov .box{background:var(--paper);border-radius:18px;padding:22px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.ov h3{margin:0 0 8px}
+#toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,30px);background:var(--night);color:#fbefd3;border-radius:12px;padding:11px 18px;font-weight:700;opacity:0;transition:.25s;z-index:60;max-width:92vw;text-align:center;pointer-events:none}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.guru{background:#fff3b0;color:#5a4300;text-align:center;font-weight:800;font-size:14px;padding:4px}
+footer{text-align:center;color:var(--muted);font-size:13.5px;padding:8px 16px 36px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="guruBar" class="guru" hidden>MODE GURU / UJI COBA – timer dipercepat, hasil TIDAK dikirim ke Google Sheets</div>
+<header class="top">
+  <svg class="scene" viewBox="0 0 900 190" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <circle cx="690" cy="92" r="46" fill="#f3b94d" opacity=".92"/><circle cx="690" cy="92" r="64" fill="#f3b94d" opacity=".16"/>
+    <path d="M0 190V128l70-44 60 40 90-70 100 76 70-46 110 70 90-60 120 82 80-50 110 64V190z" fill="#3a1a12" opacity=".75"/>
+    <path d="M0 190V152l90-30 80 34 120-48 90 52 130-40 110 42 100-34 180 46V190z" fill="#241711"/>
+    <g fill="#241711"><path d="M770 190v-42h-8v-8h10v-10h-6v-6h6v-8h6v8h6v6h-6v10h10v8h-8v42z"/></g>
+  </svg>
+  <div class="wrap in">
+    <div class="brand"><small>PAH &amp; Budi Pekerti · Kelas X · SMA Negeri 1 Selat</small><h1>Petualangan Dharma</h1></div>
+    <div class="hud" id="hud"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="map" aria-label="Peta tahap petualangan">
+    <ol id="map"></ol>
+  </nav>
+  <div id="stage"></div>
+</main>
+<footer>Dibuat oleh I Kadek Juniarta, S.Pd. · Guru PAH dan Budi Pekerti · <span id="verTxt"></span></footer>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="ovRoot"></div>
+
+<script>
+/* =====================================================================
+   PENGATURAN – ubah di bagian ini saja
+   ===================================================================== */
+const CFG = {
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzyHe5Mm_Nn1L5NFX8LE9cnu90-L3x7C03muO6aq4bsRVZGSk2p7flcz9WE27aa81Ouqg/exec',
+  T2_DETIK: 20 * 60,          // Tahap 2: waktu wajib membaca materi (20 menit)
+  T4_JUMLAH: 10,              // Tahap 4: jumlah soal uji pemahaman
+  T4_DETIK_PER_SOAL: 120,     // Tahap 4: 2 menit per soal
+  T5_PG: 10,                  // Tahap 5: jumlah pilihan ganda
+  T5_PGK: 5,                  // Tahap 5: jumlah pilihan ganda kompleks (maks 5)
+  T5_BATAS_MENIT: 0,          // Tahap 5: batas waktu total (0 = tanpa batas)
+  TAMPILKAN_PEMBAHASAN: true, // Tampilkan daftar soal yang salah + kunci di akhir
+  KELAS: ['X-A','X-B','X-C','X-D','X-E','X-F','X-G','X-H']
+};
+const VERSI = 'v1.0';
+const PARAMS = new URLSearchParams(location.search);
+const GURU = PARAMS.get('guru') === '1';
+if (GURU) { CFG.T2_DETIK = 10; document.getElementById('guruBar').hidden = false; }
+const STORE_KEY = 'petualangan_dharma_x_' + (GURU ? 'guru' : 'murid');
+if (PARAMS.get('reset') === '1') { try { localStorage.removeItem(STORE_KEY); } catch (e) {} }
+document.getElementById('verTxt').textContent = VERSI;
+
+/* =====================================================================
+   BANK SOAL
+   PG  : 40 soal dari naskah SAS Gasal 2026 (diacak 20 soal setiap murid)
+   PGK : 5 soal pilihan ganda kompleks (semua pilihan benar harus dipilih)
+   k   : PG = nomor pilihan benar (0=A, 1=B, ...) | PGK = daftar pilihan benar
+   ===================================================================== */
+const PG = [
+{"id": "S1", "type": "pg", "q": "Manawa Dharmasastra (Manusmrti) yang disusun oleh Maharsi Manu merupakan salah satu kitab dalam kepustakaan suci Hindu. Kedudukan dan fungsi kitab tersebut yang paling tepat adalah …", "o": ["Sruti, yaitu wahyu langsung yang diterima para maharsi tentang hakikat Brahman", "Itihasa, yaitu kitab yang berisi kisah kepahlawanan para tokoh Hindu", "Smrti, yaitu kitab hukum yang menjadi pedoman tata kehidupan umat Hindu", "Purana, yaitu kitab yang berisi silsilah raja dan para dewa", "Wedangga, yaitu kitab yang khusus membahas tata bahasa dan astronomi"], "k": 2},
+{"id": "S2", "type": "pg", "q": "Perhatikan ilustrasi berikut!\nPada suatu masa, masyarakat menjadikan pelaksanaan upacara suci ( Yajna pengorbanan) dengan persembahan kepada para dewa sebagai jalan utama untuk mendekatkan diri kepada Tuhan. Para pendeta memimpin upacara besar, dan seluruh warga ikut berpartisipasi. Masa tersebut dan dharma utamanya adalah …", "o": ["Dwapara Yuga – yajna", "Treta Yuga – yajna", "Krta Yuga – tapa", "Kali Yuga – dana", "Treta Yuga – jnana"], "k": 0},
+{"id": "S3", "type": "pg", "q": "Prajuru sebuah desa adat membentuk tim penyuluh agar warga memahami aturan tentang pewarisan, tata krama pergaulan, dan tata cara upacara dengan merujuk pada Manawa Dharmasastra. Kegiatan tersebut menunjukkan fungsi Dharmasastra sebagai …", "o": ["Wahyu Tuhan yang tidak boleh dijabarkan dalam kehidupan bermasyarakat", "Kitab yang hanya memuat tata cara pelaksanaan upacara", "Pedoman yang hanya berlaku bagi para pendeta dan rohaniwan", "Pedoman hukum dan tata nilai yang mengatur perilaku serta hubungan sosial umat", "Kitab sejarah yang menceritakan kehidupan raja-raja pada masa Catur Yuga"], "k": 3},
+{"id": "S4", "type": "pg", "q": "Perhatikan kutipan terjemahan bebas Manawa Dharmasastra I.86 berikut!\n“Tapa adalah dharma utama pada Krta Yuga, jnana pada Treta Yuga, yajna pada Dwapara Yuga, dan dana adalah dharma utama pada Kali Yuga.” Alasan yang paling tepat mengapa dharma utama berubah dari tapa menjadi dana adalah …", "o": ["Ajaran tapa dan jnana dihapus dari Weda sejak Kali Yuga sehingga tidak boleh dilaksanakan lagi", "Dana lebih mudah dilakukan para pendeta sehingga ditetapkan sebagai kewajiban mereka saja", "Dharma utama ditetapkan bergantian tanpa dasar apa pun pada setiap pergantian yuga", "Kebajikan manusia terus meningkat sehingga tidak lagi memerlukan disiplin diri yang berat", "Kemampuan dan ketekunan manusia berkurang pada yuga-yuga berikutnya, sehingga dharma yang paling dapat dilakukan semua orang adalah dana"], "k": 4},
+{"id": "S5", "type": "pg", "q": "Perhatikan wacana berikut!\nMenurut Manawa Dharmasastra, dharma digambarkan utuh pada Krta Yuga, lalu berkurang seperempat bagian pada setiap pergantian yuga, sehingga di Kali Yuga hanya tersisa seperempat bagian. Putu menyimpulkan, “Karena dharma tinggal sedikit, manusia di Kali Yuga tidak perlu lagi berusahaa menegakkan dharma.”\nKesimpulan Putu tersebut …", "o": ["Benar, karena dharma yang tinggal seperempat bagian tidak mungkin ditegakkan lagi", "Keliru, karena berkurangnya dharma justru menuntut manusia lebih giat menegakkan dharma yang dapat dilakukan, seperti dana", "Benar, karena Dharmasastra hanya berlaku pada masa Krta Yuga", "Keliru, karena pada Kali Yuga dharma kembali utuh dengan sendirinya.", "Benar, karena hukum karma tidak lagi berlaku pada Kali Yuga"], "k": 1},
+{"id": "S6", "type": "pg", "q": "Perhatikan kasus berikut!\nPara pemuda Banjar Dharma Sari mengumpulkan dana punia untuk membangun ruang belajar bagi anak-anak kurang mampu. Mereka mengaku sulit melakukan tapa yang panjang karena harus bersekolah dan bekerja. Penilaian yang paling tepat terhadap kegiatan tersebut berdasarkan ajaran Catur Yuga adalah …", "o": ["Tidak sesuai, karena dharma utama masa kini adalah tapa yang sangat ketat", "Tidak sesuai, karena dana hanya boleh dilakukan oleh kaum Waisya", "Sesuai, karena dana merupakan dharma utama di Kali Yuga yang dapat dilakukan siapa saja sesuai kemampuannya", "Sesuai, tetapi hanya sah apabila disertai tapa selama berhari-hari", "Sesuai, karena dana menggantikan seluruh kewajiban yajna dan jnana"], "k": 2},
+{"id": "S7", "type": "pg", "q": "Perhatikan dua pendapat siswa berikut!\nRina: “Catur Yuga hanyalah cerita masa lalu yang tidak bermakna bagi kehidupan sekarang.”\nKomang: “Catur Yuga mengajarkan bahwa cara berdharma perlu disesuaikan dengan kemampuan dan zaman, tanpa meninggalkan tujuan dharma.” Pendapat yang paling sesuai dengan ajaran Dharmasastra adalah …", "o": ["Pendapat Komang, sebab ajaran yuga menekankan penyesuaian cara berdharma dengan kemampuan dan zaman tanpa mengubah tujuan dharma", "Pendapat Rina, sebab ajaran yuga hanya kisah yang tidak memiliki nilai hukum", "Pendapat Rina, sebab cara berdharma tidak boleh disesuaikan dengan zaman", "Pendapat Komang, sebab tujuan dharma boleh diubah mengikuti kenyamanan manusia", "Keduanya salah, sebab Dharmasastra tidak membahas Catur Yuga"], "k": 0},
+{"id": "S8", "type": "pg", "q": "Pasangan nama sumber hukum Hindu dan pengertiannya yang tepat adalah …", "o": ["Sruti – ingatan para maharsi yang ditulis kembali dalam bentuk kitab hukum", "Smrti – tradisi suci yang bersumber dari ingatan para maharsi dan menjabarkan isi Weda", "Sila – kebiasaan masyarakat yang diwariskan turun-temurun", "Acara – perilaku luhur para orang suci yang menjadi teladan", "Atmanastuti – wahyu yang diterima langsung oleh para maharsi"], "k": 1},
+{"id": "S9", "type": "pg", "q": "Dalam sebuah paruman desa adat, para prajuru memeriksa saksi dan bukti, lalu memutuskan sengketa batas tanah antarwarga. Proses tersebut paling tepat dikaitkan dengan bagian Dharmasastra yang disebut …", "o": ["Prayascita, yaitu aturan penebusan dan penyucian diri", "Acara, yaitu aturan tata laku dan kebiasaan sehari-hari", "Sruti, yaitu wahyu yang diterima para maharsi", "Wyawahara, yaitu ketentuan hukum dan tata cara penyelesaian perkara", "Sila, tingkah laku yang benar dalam kehidupan."], "k": 3},
+{"id": "S10", "type": "pg", "q": "Perhatikan kasus berikut!\nDua bersaudara di sebuah desa adat berselisih tentang pembagian tanah warisan orang tua mereka. Langkah penyelesaian yang paling tepat berdasarkan sumber hukum Hindu adalah …", "o": ["Keputusan sepenuhnya diserahkan kepada saudara tertua tanpa musyawarah", "Pembagian ditentukan dengan undian agar tidak ada pihak yang diuntungkan.", "Dharmasastra diabaikan dan sengketa diselesaikan menurut kekuatan pihak yang paling berpengaruh", "Sengketa diselesaikan melalui paruman (wyawahara) dengan merujuk Dharmasastra dan awig-awig yang selaras dengan dharma, serta memperhatikan keadilan dan ketenangan batin kedua pihak.", "Penyelesaian ditunda tanpa batas sampai ada wahyu baru"], "k": 3},
+{"id": "S11", "type": "pg", "q": "Dalam diskusi kelas, Manik Yoga bertanya, “Jika Weda (Sruti) adalah sumber hukum yang utama, mengapa masih diperlukan Smrti, Sila, Acara, dan Atmanastuti?” Jawaban yang paling tepat adalah …", "o": ["Sruti bersifat pokok dan umum sehingga memerlukan penjabaran, keteladanan, tradisi, dan pertimbangan hati nurani agar dapat diterapkan sesuai keadaan", "Sruti sudah tidak berlaku sehingga harus digantikan oleh keempat sumber lain", "Keempat sumber lain berdiri sendiri dan boleh bertentangan dengan Sruti", "Sumber hukum tambahan diperlukan karena Weda tidak dapat dipahami oleh siapa pun", "Sumber hukum tambahan hanya dipakai oleh pemerintah, bukan oleh umat"], "k": 0},
+{"id": "S12", "type": "pg", "q": "Perhatikan kasus berikut!\nSebuah desa adat memiliki tradisi ngayah, yaitu gotong royong menyiapkan upacara secara turun-temurun. Muncul usulan agar ngayah diganti dengan denda uang bagi warga yang tidak hadir, termasuk warga yang sedang sakit.\nPertimbangan yang paling sesuai dengan sumber hukum Hindu adalah …", "o": ["Ngayah dihapus karena tradisi lama tidak lagi bernilai hukum", "Denda diberlakukan tanpa pengecualian agar aturan terlihat tegas", "Semangat ngayah sebagai acara yang baik dipertahankan, tetapi pelaksanaannya disesuaikan dengan keadaan warga berdasarkan keadilan dan kemanusiaan", "Keputusan diserahkan kepada warga terkaya karena paling mampu membayar", "Ngayah diwajibkan penuh tanpa musyawarah karena sudah menjadi tradisi"], "k": 2},
+{"id": "S13", "type": "pg", "q": "Perhatikan pernyataan berikut!\nDi suatu desa, rangkaian upacara selalu disertai pesta minuman keras yang telah dilakukan puluhan tahun. Sebagian warga berkata, “Ini acara desa, jadi sah sebagai hukum.”\nTanggapan yang paling tepat adalah …", "o": ["Sah, sebab semua tradisi otomatis menjadi sumber hukum Hindu", "Sah, sebab lamanya tradisi menjadikannya lebih tinggi daripada Sruti", "Tidak sah, sebab Acara hanya berlaku bagi para pendeta", "Sah, asalkan sebagian besar warga menyetujuinya", "Tidak sah, sebab Acara hanya dapat menjadi sumber hukum bila selaras dengan Weda dan dharma, sehingga tradisi yang bertentangan perlu diluruskan"], "k": 4},
+{"id": "S14", "type": "pg", "q": "Punarbhawa dalam ajaran Hindu berarti …", "o": ["Kelahiran kembali atma ke dunia dalam badan yang baru", "terbebasnya atma dari ikatan duniawi untuk selamanya", "Hasil dari setiap perbuatan yang dilakukan manusia", "Kematian atma bersama dengan badan jasmani", "Kebaikan yang diperoleh dari upacara persembahan"], "k": 0},
+{"id": "S15", "type": "pg", "q": "Perhatikan perumpamaan berikut!\n“Seperti orang membuang pakaian yang telah usang lalu mengenakan yang baru, demikian pula atma meninggalkan badan yang lama dan memasuki badan yang baru.” (Bhagawadgita II.22, terjemahan bebas) Perumpamaan tersebut menjelaskan bahwa …", "o": ["Atma ikut menjadi tua dan rusak bersama badan", "Kematian berarti lenyapnya atma untuk selamanya", "Badan jasmani dapat berganti, sedangkan atma kekal dan berpindah ke badan baru sesuai karmanya", "Pakaian yang baik menentukan kedudukan seseorang di masyarakat", "Atma dan badan jasmani sama-sama kekal"], "k": 2},
+{"id": "S16", "type": "pg", "q": "Rudi dikenal jujur dan rajin menolong sesama. Menurut ajaran karmaphala dan punarbhawa, perbuatan Rudi tersebut …", "o": ["Hilang bersamaan dengan kematian badannya", "Menjadi benih hasil yang memengaruhi kehidupannya sekarang dan kelahirannya kelak", "Hanya dinikmati oleh orang tuanya", "Dapat digantikan hanya dengan upacara besar", "Ditentukan oleh keturunannya"], "k": 1},
+{"id": "S17", "type": "pg", "q": "Perhatikan kisah berikut!\nWayan dan Made adalah saudara kembar yang dibesarkan dalam keluarga yang sama. Wayan lahir sehat dan cepat tanggap, tetapi sering berbohong dan menyontek. Made lahir dengan kondisi kesehatan yang lemah, namun rajin belajar dan suka menolong.\nAnalisis yang paling tepat tentang keterkaitan karma dengan kehidupan mereka adalah …", "o": ["Kondisi awal kelahiran tidak berhubungan dengan karma karena hanya ditentukan keturunan", "Perbuatan sekarang tidak berpengaruh karena semuanya sudah ditentukan sejak lahir", "Karma baik dan buruk selalu dinikmati seketika tanpa pernah tersisa untuk kelahiran berikutnya", "Kondisi Made adalah hukuman yang tidak dapat diperbaiki, sedangkan Wayan pasti selalu beruntung", "Kondisi awal dapat dipengaruhi hasil karma dari kehidupan lampau (sancita), sedangkan perbuatan sekarang (kriyamana) menentukan hasil pada masa kini dan kelahiran berikutnya"], "k": 4},
+{"id": "S18", "type": "pg", "q": "Perhatikan pernyataan berikut!\n“Ada orang yang berbuat curang tetapi hidupnya tampak sukses. Itu membuktikan hukum karmaphala tidak ada.”\nTanggapan yang paling tepat berdasarkan ajaran karmaphala dan punarbhawa adalah …", "o": ["Pernyataan benar, karena hasil perbuatan hanya bergantung pada kekayaan", "Pernyataan benar, karena karmaphala hanya berlaku bagi orang miskin", "Pernyataan salah, karena setiap perbuatan buruk pasti langsung dihukum saat itu juga", "Pernyataan keliru, karena hasil karma tidak selalu diterima seketika; keberhasilan saat ini dapat berasal dari karma baik terdahulu, sedangkan perbuatan curang sekarang tetap akan berbuah", "Pernyataan keliru, karena kesuksesan selalu bukti dari perbuatan yang benar"], "k": 3},
+{"id": "S19", "type": "pg", "q": "Perhatikan wacana berikut!\nAtma yang masih terikat karma akan lahir kembali, berbuat lagi, lalu menerima hasil perbuatannya, sehingga siklus kelahiran dan kematian (samsara) terus berulang.\nAgar siklus tersebut dapat berakhir, hal yang paling tepat dilakukan adalah …", "o": ["Berbuat sesuai dharma tanpa terikat pada hasilnya hingga karma tidak lagi mengikat dan moksa tercapai", "Menghindari semua perbuatan dan berhenti bekerja sepenuhnya", "Mengumpulkan sebanyak-banyaknya harta agar tidak lahir miskin", "Mengulang kelahiran sebanyak mungkin agar karma cepat habis", "Menyalahkan keadaan sebagai penyebab semua penderitaan"], "k": 0},
+{"id": "S20", "type": "pg", "q": "Apa yang dimaksud dengan Sancita karmaphala dalam konteks karma dalam kehidupan dalam ajaran agama hindu?", "o": ["Karma yang dilakukan sekarang dan buahnya diterima sekarang", "Karma yang lalu, namun baru dapat dinikmati buahnya pada kelahiran sekarang", "Karma yang belum pernah dilakukan", "Karma yang hanya berlaku pada manusia suci", "Karma yang hanya berlaku pada masa lalu"], "k": 1},
+{"id": "S21", "type": "pg", "q": "Perhatikan kasus berikut!\nPak Gede memperoleh harta dari korupsi, lalu menyumbang besar untuk upacara agar “dosanya terhapus”. Bu Ayu bekerja jujur dengan penghasilan sederhana.\nMenurut hukum karmaphala, pandangan Pak Gede …", "o": ["Benar, karena sumbangan besar otomatis menghapus semua karma buruk", "Benar, karena karma hanya dinilai dari besarnya persembahan", "Benar, karena orang kaya memiliki karma yang berbeda dengan orang biasa", "Keliru, karena karma tidak berlaku bagi orang yang memiliki jabatan", "Keliru, sebab karma buruk tidak dapat ditebus dengan sumbangan semata; perbuatan buruk harus dihentikan dan diganti dengan subha karma"], "k": 4},
+{"id": "S22", "type": "pg", "q": "Perilaku peserta didik yang paling mencerminkan pemahaman terhadap ajaran punarbhawa adalah …", "o": ["Menyontek saat ujian asalkan nilainya tinggi", "Menjaga pikiran, ucapan, dan perbuatan karena sadar setiap perbuatan berakibat pada kehidupan sekarang dan yang akan datang", "Menunda belajar karena yakin nasib sudah ditentukan", "Berbuat baik hanya ketika sedang diawasi guru", "Menyalahkan orang tua atas setiap kegagalan yang dialami"], "k": 1},
+{"id": "S23", "type": "pg", "q": "Pasangan contoh perilaku dengan unsur Tri Kaya Parisudha yang benar adalah", "o": ["Membantu teman membawa buku – manacika", "Berpikir jernih sebelum bertindak – kayika", "Berkata jujur dan sopan kepada guru – wacika", "Tidak membuang sampah sembarangan – wacika", "Tidak iri terhadap prestasi teman – kayika"], "k": 2},
+{"id": "S24", "type": "pg", "q": "Perhatikan kasus berikut!\nDimas dahulu sering menyontek dan berbohong. Setelah mempelajari ajaran punarbhawa, ia menyesal dan berkata, “Sudah terlambat, hasil buruknya pasti akan menimpaku terus.”\nSikap terbaik yang sesuai dengan ajaran punarbhawa dan karmaphala adalah …", "o": ["Pasrah karena karmanya sudah tidak dapat diubah", "Menyalahkan teman-teman yang dahulu mengajaknya menyontek", "Menunggu kelahiran berikutnya baru mulai memperbaiki diri", "Menyadari kekeliruan, berhenti berbuat asubha karma, dan memperbanyak subha karma mulai sekarang", "Cukup melakukan upacara tanpa mengubah perilaku"], "k": 3},
+{"id": "S25", "type": "pg", "q": "Perhatikan pernyataan berikut!\nMenurut Sarasamuscaya, di antara semua makhluk hidup, kelahiran sebagai manusia adalah yang paling utama karena hanya manusia yang mampu membedakan perbuatan baik dan buruk serta menggunakan perbuatan baik untuk membebaskan diri dari penderitaan. Pesan yang paling tepat bagi remaja Hindu berdasarkan pernyataan tersebut dan ajaran punarbhawa adalah …", "o": ["Kelahiran sebagai manusia pasti menjamin kehidupan yang selalu bahagia", "Manusia bebas berbuat apa saja karena hasilnya tidak akan kembali kepadanya", "Manusia tidak perlu memikirkan karma karena sudah lahir sebagai manusia", "Derajat seseorang sebagai manusia ditentukan oleh jumlah hartanya", "Kelahiran sebagai manusia adalah kesempatan memperbaiki kualitas diri, sehingga harus dimanfaatkan dengan memperbanyak subha karma"], "k": 4},
+{"id": "S26", "type": "pg", "q": "Perhatikan catatan refleksi berikut!\nSelama sepekan, Rani membantu nenek, memaafkan temannya, dua kali berkata kasar kepada adiknya, dan sekali menunda tugas sekolah.\nRencana perbaikan diri yang paling efektif berdasarkan ajaran punarbhawa adalah", "o": ["Menghapus catatan tersebut agar tidak diingat", "Mempertahankan subha karma yang sudah ada, menetapkan target mengendalikan ucapan dan disiplin tugas, lalu mengevaluasinya setiap minggu", "Cukup berdoa tanpa mengubah perilaku", "Menunggu kelahiran berikutnya untuk mengubah kebiasaan", "Membandingkan diri dengan teman agar merasa lebih baik"], "k": 1},
+{"id": "S27", "type": "pg", "q": "Perhatikan alasan tiga siswa dalam berbuat baik berikut!\nPutu: “Agar dipuji dan mendapat nilai bagus.”\nKadek: “Karena setiap perbuatan berbuah; saya ingin meningkatkan kualitas diri hingga akhirnya terbebas dari samsara.”\nNyoman: “Semua sudah ditakdirkan, jadi perbuatan saya tidak penting.”\nAlasan yang paling sejalan dengan ajaran punarbhawa adalah alasan …", "o": ["Kadek, karena menyadari hubungan perbuatan, hasil, dan tujuan akhir kehidupan", "Putu, karena pujian adalah tujuan utama berbuat baik", "Nyoman, karena menerima keadaan tanpa berusaha", "Putu dan Kadek, karena keduanya sama-sama berbuat baik", "Putu, Kadek, dan Nyoman, karena semuanya benar"], "k": 0},
+{"id": "S28", "type": "pg", "q": "Menurut Bhagawadgita IV.13, pembagian catur warna didasarkan pada …", "o": ["Keturunan dan kekayaan", "Garis keturunan dan gelar", "Guna (bakat dan sifat) dan karma (pekerjaan)", "Tingkat pendidikan formal dan jabatan", "Banyaknya persembahan yang diberikan"], "k": 2},
+{"id": "S29", "type": "pg", "q": "Pemenuhan artha dan kama secara sah berlandaskan dharma paling banyak dilakukan pada tahap Catur Asrama …", "o": ["Grhasta", "Brahmacari", "Wanaprasta", "Bhiksuka", "Semua tahap dengan porsi yang sama"], "k": 0},
+{"id": "S30", "type": "pg", "q": "Keterkaitan Catur Warna dengan Catur Purusa Artha yang benar adalah …", "o": ["Hanya golongan Brahmana yang boleh mengejar moksa", "Golongan Waisya hanya mengejar artha tanpa memperhatikan dharma", "Golongan Ksatriya hanya mengejar kama", "Setiap warna melaksanakan swadharma sebagai sarana memperoleh artha dan kama berlandaskan dharma untuk mencapai moksa", "Golongan Sudra tidak berhak atas Catur Purusa Artha"], "k": 3},
+{"id": "S31", "type": "pg", "q": "Pasangan profesi dan warna yang tepat berdasarkan guna dan karma adalah …", "o": ["Guru yang mendidik siswa – Waisya", "Polisi yang menjaga keamanan – Brahmana", "Karyawan pabrik yang bekerja dengan tenaga dan keterampilan – Ksatria", "Pengusaha toko kelontong yang mengelola perdagangan – Waisya", "Prajurit yang melindungi negara – Sudra"], "k": 3},
+{"id": "S32", "type": "pg", "q": "Perhatikan kasus berikut!\nKetut lahir dalam keluarga petani. Ia tekun belajar, bersifat tenang dan bijak, lalu menjadi guru yang mengabdikan diri mengajar anak-anak di daerah terpencil.\nWarna yang sesuai dengan Ketut menurut ajaran catur warna adalah …", "o": ["Brahmana, karena guna dan karmanya sebagai pendidik, bukan karena keturunan orang tuanya", "Waisya, karena orang tuanya adalah petani", "Sudra, karena keluarganya tidak memiliki gelar tertentu", "Ksatria, karena ia menerima gaji dari pemerintah", "tidak memiliki warna, karena profesinya berbeda dari profesi orang tuanya"], "k": 0},
+{"id": "S33", "type": "pg", "q": "Perhatikan kasus berikut!\nPak Wayan semula seorang prajurit. Setelah pensiun, ia membuka usaha kuliner, mengelola keuangan dan pemasaran, dan usahanya berkembang pesat.\nPandangan catur warna terhadap perubahan kegiatan Pak Wayan adalah …", "o": ["Tidak mungkin berubah karena warna ditetapkan sejak lahir dan tetap seumur hidup", "Warna mengikuti guna dan karma, sehingga kegiatannya kini mencerminkan Waisya", "Ia tetap Ksatria selamanya karena pernah menjadi prajurit", "Ia menjadi Sudra karena meninggalkan tugas negara", "Ia menjadi Brahmana karena usahanya besar"], "k": 1},
+{"id": "S34", "type": "pg", "q": "Perhatikan pernyataan berikut!\n“Anak seorang pendeta pasti Brahmana, walaupun malas belajar dan tidak pernah menjalankan swadharma kerohanian serta tidak memiliki keterampilan yang pasti.” Analisis yang paling tepat terhadap pernyataan tersebut menurut catur warna adalah …", "o": ["Tepat, karena warna ditentukan oleh orang tua", "Tepat, karena gelar keturunan menjamin kemampuan", "Tepat, karena guna dan karma tidak berpengaruh terhadap warna", "Tidak tepat, karena anak pendeta pasti menjadi Sudra", "Tidak tepat, karena warna ditentukan guna dan karma, bukan keturunan, sehingga keturunan tidak otomatis menjadikannya Brahmana"], "k": 4},
+{"id": "S35", "type": "pg", "q": "Perhatikan data tiga orang berikut!\nDewi mengatur strategi pemasaran dan keuangan perusahaan; Eka memimpin pasukan pengamanan desa; Gita mengajar dan membimbing kerohanian.\nPasangan nama dan warna yang paling sesuai adalah …", "o": ["Dewi – Brahmana; Eka – Ksatria; Gita – Waisya", "Dewi – Ksatria; Eka – Waisya; Gita – Brahmana", "Dewi – Waisya; Eka – Ksatria; Gita – Brahmana", "Dewi – Sudra; Eka – Ksatria; Gita – Waisya", "Dewi – Waisya; Eka – Brahmana; Gita – Ksatria"], "k": 2},
+{"id": "S36", "type": "pg", "q": "Pasangan warna dan swadharma pokoknya yang tepat adalah …", "o": ["Brahmana – perdagangan dan ekonomi", "Waisya – kerohanian dan pendidikan", "Sudra – pemerintahan dan pertahanan", "Ksatria – pelayanan melalui tenaga dan keterampilan", "Ksatria – melindungi masyarakat dan menegakkan keadilan melalui pemerintahan dan pertahanan"], "k": 4},
+{"id": "S37", "type": "pg", "q": "Perhatikan ilustrasi berikut!\nSebuah desa membangun balai banjar. Pandita memberi petunjuk tentang waktu dan tata nilai pembangunan; kepala desa memimpin dan menjaga keamanan kegiatan; para pengusaha dan petani menyumbang dana serta bahan bangunan; para tukang dan pekerja membangun fisik bangunan. Pasangan peran dan warna yang tepat adalah …", "o": ["Pandita – Waisya; kepala desa – Brahmana; pengusaha – Ksatria; tukang – Sudra", "Pandita – Brahmana; kepala desa – Ksatria; pengusaha dan petani – Waisya; tukang dan pekerja – Sudra", "Pandita – Brahmana; kepala desa – Waisya; pengusaha – Ksatria; tukang – Sudra", "Pandita – Ksatria; kepala desa – Brahmana; pengusaha – Sudra; tukang – Waisya", "Pandita – Sudra; kepala desa – Ksatria; pengusaha – Brahmana; tukang – Waisya"], "k": 1},
+{"id": "S38", "type": "pg", "q": "Menurut Bhagavad Gita XVIII.44, kewajiban golongan Waisya adalah …", "o": ["Memimpin pemerintahan dan berperang", "Mengajarkan ilmu pengetahuan suci", "Melayani golongan lain semata", "Bertapa dan menyepi", "Bertani, melindungi ternak, dan berdagang"], "k": 4},
+{"id": "S39", "type": "pg", "q": "Pernyataan yang menunjukkan hubungan saling melengkapi antar warna dalam masyarakat adalah …", "o": ["Petani menyediakan pangan, guru mendidik anak petani, aparat menjaga keamanan sawah, dan pekerja membantu pengolahan hasil sehingga semuanya saling membutuhkan", "Satu warna dapat memenuhi seluruh kebutuhan masyarakat tanpa bantuan warna lain", "Warna yang jumlahnya paling sedikit boleh diabaikan karena tidak diperlukan", "Setiap warna harus bersaing agar yang paling kuat menguasai masyarakat", "Pekerjaan hanya dihargai bila dilakukan oleh warna tertentu"], "k": 0},
+{"id": "S40", "type": "pg", "q": "Perhatikan data berikut!\nDesa A membagi tugas gotong royong berdasarkan keahlian dan kesediaan warganya. Desa B membaginya berdasarkan gelar keturunan. Setahun kemudian, proyek Desa A selesai tepat waktu dengan sedikit perselisihan, sedangkan proyek Desa B sering tertunda dan diwarnai perselisihan. Simpulan yang paling tepat berdasarkan ajaran catur warna adalah …", "o": ["Keturunan lebih menjamin keberhasilan daripada keahlian", "Perselisihan tidak berkaitan dengan cara pembagian tugas", "Keberhasilan Desa A hanya karena jumlah warganya lebih banyak", "Keharmonisan lebih mudah dicapai bila peran dibagi berdasarkan guna dan karma serta saling melengkapi, bukan berdasarkan keturunan", "Pembagian tugas tidak memengaruhi keharmonisan masyarakat"], "k": 3}
+];
+const PGK = [
+ {id:'K1',type:'pgk',q:'Perhatikan pasangan Catur Yuga dan dharma utamanya menurut Manawa Dharmasastra I.86 berikut!\nPasangan yang benar adalah …',
+  o:['Krta Yuga – tapa','Treta Yuga – jnana','Dwapara Yuga – yajna','Kali Yuga – tapa','Kali Yuga – jnana'],k:[0,1,2]},
+ {id:'K2',type:'pgk',q:'Pernyataan yang benar tentang sumber hukum Hindu adalah …',
+  o:['Sruti adalah wahyu Tuhan yang menjadi sumber hukum yang utama','Smrti menjabarkan isi Weda agar dapat diterapkan dalam kehidupan','Acara (tradisi) dapat menjadi sumber hukum bila selaras dengan Weda dan dharma','Tradisi yang sudah berlangsung lama boleh bertentangan dengan Sruti','Wyawahara adalah aturan penyucian diri dan penebusan dosa'],k:[0,1,2]},
+ {id:'K3',type:'pgk',q:'Pernyataan yang benar tentang punarbhawa dan karmaphala adalah …',
+  o:['Punarbhawa adalah kelahiran kembali atma ke dalam badan yang baru','Kriyamana karma adalah karma yang dilakukan pada masa kini','Berbuat sesuai dharma tanpa terikat pada hasilnya membawa atma menuju moksa','Karma buruk otomatis terhapus oleh sumbangan yang besar','Atma ikut musnah bersama badan jasmani ketika seseorang meninggal'],k:[0,1,2]},
+ {id:'K4',type:'pgk',q:'Pernyataan yang benar tentang Catur Warna adalah …',
+  o:['Pembagian warna didasarkan pada guna (bakat dan sifat) dan karma (pekerjaan)','Waisya bertugas di bidang ekonomi, seperti bertani, beternak, dan berdagang','Seluruh warna saling melengkapi dalam kehidupan masyarakat','Warna seseorang pasti sama dengan warna orang tuanya','Golongan Sudra tidak berhak mengejar Catur Purusa Artha'],k:[0,1,2]},
+ {id:'K5',type:'pgk',q:'Pasangan perilaku dan unsur Tri Kaya Parisudha yang benar adalah …',
+  o:['Berkata jujur dan santun kepada guru – wacika','Tidak iri hati terhadap prestasi teman – manacika','Tidak membuang sampah sembarangan – kayika','Berpikir jernih sebelum bertindak – kayika','Membantu teman membawa buku – wacika'],k:[0,1,2]}
+];
+const BANK = {}; PG.concat(PGK).forEach(q => BANK[q.id] = q);
+
+/* =====================================================================
+   MATERI TAHAP 2
+   ===================================================================== */
+const TOPIK = [
+{id:'t1',title:'1. Dharmasastra & Catur Yuga',html:`
+<span class="kicker">Topik 1</span>
+<h3 style="margin-top:2px">Manawa Dharmasastra dan Catur Yuga</h3>
+<h4>A. Apa itu Dharmasastra?</h4>
+<p><b>Dharmasastra</b> berasal dari kata <i>dharma</i> (kebenaran, kewajiban, hukum suci) dan <i>sastra</i> (ajaran, kitab). Jadi, Dharmasastra adalah <b>kitab suci yang memuat hukum dan tata nilai kehidupan umat Hindu</b>. Kitab Dharmasastra yang paling terkenal adalah <b>Manawa Dharmasastra</b> (disebut juga <b>Manusmrti</b>) yang disusun oleh <b>Maharsi Manu</b> dan terdiri atas 12 <i>adhyaya</i> (bab).</p>
+<h4>B. Kedudukan dalam kepustakaan suci Hindu</h4>
+<p>Manawa Dharmasastra termasuk golongan <b>Smrti</b>, yaitu kitab yang bersumber dari ingatan para maharsi dan berfungsi <b>menjabarkan isi Weda (Sruti)</b> agar dapat dipakai sebagai pedoman hidup sehari-hari. Perhatikan perbedaannya:</p>
+<div class="tblw"><table>
+<tr><th>Golongan</th><th>Pengertian</th><th>Contoh</th></tr>
+<tr><td><b>Sruti</b></td><td>Wahyu yang didengar/diterima langsung oleh para maharsi; sumber hukum tertinggi</td><td>Catur Weda (Rgweda, Samaweda, Yajurweda, Atharwaweda)</td></tr>
+<tr><td><b>Smrti</b></td><td>Ingatan para maharsi; menjabarkan isi Weda, termasuk kitab hukum</td><td><b>Manawa Dharmasastra</b>, Wedangga, Itihasa, Purana, Upaweda lainnya</td></tr>
+<tr><td>Itihasa</td><td>Kisah kepahlawanan dan teladan hidup</td><td>Ramayana, Mahabharata</td></tr>
+<tr><td>Purana</td><td>Kisah penciptaan, silsilah dewa dan raja</td><td>Bhagawata Purana, dll.</td></tr>
+<tr><td>Wedangga</td><td>“Anggota” Weda: tata bahasa, ritual, astronomi, dsb.</td><td>Siksa, Wyakarana, Jyotisa, Kalpa, dll.</td></tr>
+</table></div>
+<h4>C. Isi pokok dan fungsi Dharmasastra</h4>
+<p>Dharmasastra mengatur hidup bermasyarakat: tata krama pergaulan, pewarisan, tugas-tugas Catur Warna dan Catur Asrama, hukum dan peradilan, tata upacara, hingga cara menebus kesalahan. Isinya sering dikelompokkan menjadi tiga bagian besar:</p>
+<ul>
+<li><b>Acara</b> – aturan tata laku dan kebiasaan sehari-hari, termasuk tata cara upacara.</li>
+<li><b>Wyawahara</b> – ketentuan hukum dan tata cara menyelesaikan perkara (pemeriksaan saksi dan bukti, sengketa tanah, warisan, utang-piutang, dan sebagainya).</li>
+<li><b>Prayascita</b> – aturan penebusan dan penyucian diri setelah berbuat keliru.</li>
+</ul>
+<div class="callout jade"><b class="t">Fungsi Dharmasastra</b>Pedoman <b>hukum dan tata nilai</b> yang mengatur perilaku dan hubungan sosial <b>seluruh umat</b> — bukan hanya milik pendeta, bukan sekadar kitab upacara, dan bukan kitab sejarah raja-raja. Contoh: prajuru desa adat memberi penyuluhan tentang pewarisan, tata krama, dan upacara dengan merujuk Manawa Dharmasastra.</div>
+<h4>D. Catur Yuga: empat zaman dan dharma utamanya</h4>
+<p><b>Catur Yuga</b> adalah empat zaman dalam siklus waktu: <b>Krta (Satya) Yuga, Treta Yuga, Dwapara Yuga, dan Kali Yuga</b>. Manawa Dharmasastra I.86 menyatakan bahwa dharma utama pada setiap zaman berbeda:</p>
+<div class="sloka">“Tapa param krtayuge, tretayam jnanam ucyate, dwapare yajnam evahur danam ekam kalau yuge.”<small>Tapa adalah dharma utama pada Krta Yuga, jnana pada Treta Yuga, yajna pada Dwapara Yuga, dan dana pada Kali Yuga.</small></div>
+<div class="tblw"><table>
+<tr><th>Yuga</th><th>Dharma (“kaki”)</th><th>Dharma utama</th><th>Gambaran</th></tr>
+<tr><td>Krta (Satya)</td><td>4 bagian (utuh)</td><td><b>Tapa</b></td><td>Manusia mampu disiplin diri dan pengendalian indria yang sangat tinggi</td></tr>
+<tr><td>Treta</td><td>3 bagian</td><td><b>Jnana</b></td><td>Pengetahuan suci/kebijaksanaan menjadi jalan utama</td></tr>
+<tr><td>Dwapara</td><td>2 bagian</td><td><b>Yajna</b></td><td>Upacara suci/pengorbanan dengan persembahan; pendeta memimpin, warga ikut serta</td></tr>
+<tr><td>Kali</td><td>1 bagian</td><td><b>Dana</b></td><td>Berbagi (dana punia) yang dapat dilakukan siapa pun sesuai kemampuan</td></tr>
+</table></div>
+<p>Dharma digambarkan seperti <b>lembu berkaki empat</b>. Pada Krta Yuga berdiri tegak dengan empat kaki; setiap pergantian yuga <b>berkurang seperempat bagian</b>, sehingga di Kali Yuga hanya tersisa satu kaki.</p>
+<h4>E. Mengapa dharma utama berubah menjadi dana?</h4>
+<p>Karena <b>kemampuan, ketekunan, dan kesetiaan manusia berkurang</b> pada yuga-yuga berikutnya. Tapa yang sangat ketat tidak lagi dapat dilakukan semua orang, sehingga dharma yang paling mungkin dilaksanakan oleh siapa saja ialah <b>dana</b>. Perubahan ini <b>bukan</b> berarti tapa, jnana, dan yajna dihapus — semuanya tetap bernilai.</p>
+<div class="callout red"><b class="t">Awas salah paham!</b>“Dharma tinggal sedikit, jadi tidak perlu menegakkan dharma” adalah kesimpulan yang <b>keliru</b>. Justru ketika dharma berkurang, manusia dituntut lebih giat menegakkan dharma yang <b>dapat dilakukan</b>, misalnya dana punia.</div>
+<h4>F. Dana punia di masa kini</h4>
+<p>Dana tidak hanya uang. Dana dapat berupa <b>harta</b> (dana punia untuk pembangunan ruang belajar bagi anak kurang mampu, bantuan bencana), <b>ilmu</b> (mengajar teman yang kesulitan, berbagi catatan), dan <b>tenaga</b> (ngayah, gotong royong), yang dilakukan dengan <b>tulus ikhlas dan sesuai kemampuan</b>. Pemuda yang kesulitan bertapa panjang karena sekolah dan bekerja tetap dapat berdharma melalui dana punia.</p>
+<div class="kw"><span>Smrti</span><span>Wyawahara</span><span>Acara</span><span>Prayascita</span><span>Catur Yuga</span><span>Tapa–Jnana–Yajna–Dana</span></div>
+`},
+{id:'t2',title:'2. Sumber Hukum Hindu',html:`
+<span class="kicker">Topik 2</span>
+<h3 style="margin-top:2px">Sumber-Sumber Hukum Hindu</h3>
+<p>Hukum Hindu tidak berdiri pada satu sumber saja. Menurut Manawa Dharmasastra, sumber hukum Hindu terdiri atas lima, yang tersusun dari yang paling utama:</p>
+<div class="tblw"><table>
+<tr><th>Sumber</th><th>Pengertian</th><th>Contoh penerapan</th></tr>
+<tr><td><b>1. Sruti</b></td><td>Wahyu Tuhan yang diterima para maharsi (Weda). Sumber hukum <b>yang utama</b>, bersifat pokok dan umum.</td><td>Ajaran dharma, satya, ahimsa dalam Weda</td></tr>
+<tr><td><b>2. Smrti</b></td><td>Tradisi suci dari ingatan para maharsi yang <b>menjabarkan Weda</b>.</td><td>Manawa Dharmasastra mengatur pewarisan, tata krama, dan upacara</td></tr>
+<tr><td><b>3. Sila</b></td><td>Tingkah laku yang baik/luhur, teladan para orang suci.</td><td>Meneladani kejujuran, kesabaran, dan kerendahan hati orang suci</td></tr>
+<tr><td><b>4. Acara</b></td><td>Tradisi dan kebiasaan baik yang diwariskan turun-temurun, <b>selama selaras dengan Weda dan dharma</b>.</td><td>Ngayah (gotong royong menyiapkan upacara)</td></tr>
+<tr><td><b>5. Atmanastuti</b></td><td>Kepuasan/ketenangan batin; suara hati nurani yang jernih.</td><td>Keputusan adil yang menenangkan kedua pihak yang bersengketa</td></tr>
+</table></div>
+<h4>Mengapa masih perlu Smrti, Sila, Acara, dan Atmanastuti?</h4>
+<p>Karena Sruti bersifat <b>pokok dan umum</b>. Agar dapat diterapkan sesuai keadaan, diperlukan <b>penjabaran</b> (Smrti), <b>keteladanan</b> (Sila), <b>tradisi</b> (Acara), dan <b>pertimbangan hati nurani</b> (Atmanastuti). Keempatnya <b>tidak boleh bertentangan dengan Sruti</b>.</p>
+<div class="callout"><b class="t">Aturan emas</b>Tradisi hanya sah menjadi sumber hukum bila <b>selaras dengan Weda dan dharma</b>. Lama berlangsungnya sebuah kebiasaan, atau persetujuan mayoritas, tidak otomatis membuatnya sah. Contoh: pesta minuman keras dalam rangkaian upacara tidak dapat dibenarkan walaupun sudah puluhan tahun dilakukan — tradisi seperti itu perlu <b>diluruskan</b>.</div>
+<h4>Menyelesaikan sengketa: peran Wyawahara dan paruman</h4>
+<p>Sengketa batas tanah atau pembagian warisan diselesaikan melalui <b>paruman</b> (musyawarah) di desa adat. Prajuru memeriksa saksi dan bukti — inilah <b>Wyawahara</b>. Langkah yang tepat:</p>
+<ol class="l"><li>Menyelenggarakan paruman, bukan menyerahkan keputusan pada satu orang atau pihak berpengaruh.</li><li>Merujuk <b>Dharmasastra</b> dan <b>awig-awig</b> yang selaras dengan dharma.</li><li>Memperhatikan <b>keadilan</b> dan <b>ketenangan batin</b> (atmanastuti) kedua pihak.</li></ol>
+<h4>Contoh kasus: ngayah dan denda</h4>
+<p>Bila ada usul mengganti ngayah dengan denda uang bagi yang tidak hadir (termasuk yang sedang sakit), pertimbangan yang tepat adalah <b>mempertahankan semangat ngayah sebagai acara yang baik</b>, tetapi <b>menyesuaikan pelaksanaannya</b> dengan keadaan warga berdasarkan keadilan dan kemanusiaan.</p>
+<div class="kw"><span>Sruti</span><span>Smrti</span><span>Sila</span><span>Acara</span><span>Atmanastuti</span><span>Paruman</span><span>Awig-awig</span></div>
+`},
+{id:'t3',title:'3. Punarbhawa & Karmaphala',html:`
+<span class="kicker">Topik 3</span>
+<h3 style="margin-top:2px">Punarbhawa dan Karmaphala</h3>
+<h4>A. Letaknya dalam Panca Sradha</h4>
+<p>Lima keyakinan dasar Hindu (<b>Panca Sradha</b>) adalah <b>Brahman, Atman, Karmaphala, Punarbhawa (Samsara), dan Moksa</b>. Karmaphala dan Punarbhawa saling berkaitan erat: perbuatan menghasilkan buah, dan buah yang belum selesai dinikmati membuat atma lahir kembali.</p>
+<h4>B. Punarbhawa</h4>
+<p><b>Punarbhawa</b> (punar = lagi, bhawa = lahir) berarti <b>kelahiran kembali atma ke dunia dalam badan yang baru</b>. Siklus lahir–hidup–mati–lahir kembali disebut <b>samsara</b>. Bukan atma yang mati; yang berganti adalah badan jasmaninya.</p>
+<div class="sloka">“Vāsāṁsi jīrṇāni yathā vihāya navāni gṛhṇāti naro ’parāṇi, tathā śarīrāṇi vihāya jīrṇāny anyāni saṁyāti navāni dehī.”<small>(Bhagawadgita II.22) Seperti orang menanggalkan pakaian yang usang lalu mengenakan yang baru, demikian pula atma meninggalkan badan yang tua lalu memasuki badan yang baru.</small></div>
+<p>Makna sloka: <b>badan jasmani dapat berganti, sedangkan atma kekal</b>. Atma tidak ikut tua, rusak, atau lenyap bersama badan, dan perpindahannya ke badan baru sesuai karmanya.</p>
+<h4>C. Karmaphala</h4>
+<p><b>Karma</b> = perbuatan, <b>phala</b> = hasil. Karmaphala adalah hukum sebab-akibat: setiap perbuatan pasti berbuah. Perbuatan baik disebut <b>subha karma</b>, perbuatan buruk <b>asubha karma</b>. Perbuatan dilakukan melalui <b>Tri Kaya Parisudha</b>:</p>
+<div class="tblw"><table>
+<tr><th>Unsur</th><th>Artinya</th><th>Contoh</th></tr>
+<tr><td><b>Manacika</b></td><td>Berpikir yang baik dan suci</td><td>Berpikir jernih sebelum bertindak; tidak iri pada prestasi teman</td></tr>
+<tr><td><b>Wacika</b></td><td>Berkata yang baik dan benar</td><td>Berkata jujur dan sopan kepada guru; tidak berkata kasar</td></tr>
+<tr><td><b>Kayika</b></td><td>Berbuat yang baik dan benar</td><td>Membantu teman membawa buku; tidak membuang sampah sembarangan</td></tr>
+</table></div>
+<h4>D. Tiga jenis karmaphala</h4>
+<div class="tblw"><table>
+<tr><th>Jenis</th><th>Pengertian</th><th>Contoh</th></tr>
+<tr><td><b>Sancita</b></td><td>Karma masa lampau yang tersimpan sebagai “benih”; sebagian buahnya dapat dinikmati pada kelahiran sekarang dan sebagian pada kelahiran berikutnya.</td><td>Kondisi awal kelahiran seperti bakat atau kesehatan</td></tr>
+<tr><td><b>Prarabda</b></td><td>Bagian karma lampau yang sudah “matang” dan sedang dinikmati dalam kehidupan sekarang.</td><td>Keluarga tempat lahir, kondisi tubuh, dan keadaan awal</td></tr>
+<tr><td><b>Kriyamana</b></td><td>Karma yang <b>dilakukan sekarang</b>; hasilnya dapat diterima kini atau kelak.</td><td>Belajar rajin, menolong sesama, atau menyontek hari ini</td></tr>
+</table></div>
+<p>Hubungannya seperti bertani: <b>kriyamana</b> adalah menanam benih hari ini; <b>sancita</b> adalah lumbung benih dari semua perbuatan masa lalu; <b>prarabda</b> adalah panen yang matang pada musim ini. Kriyamana hari ini akan masuk ke lumbung sancita dan menentukan masa depan.</p>
+<div class="callout jade"><b class="t">Studi kasus Wayan dan Made</b>Saudara kembar satu keluarga: Wayan sehat tetapi sering berbohong, Made lemah kesehatannya tetapi rajin dan suka menolong. Kondisi awal mereka dipengaruhi hasil karma lampau (<b>sancita/prarabda</b>), sedangkan perbuatan mereka sekarang (<b>kriyamana</b>) menentukan hasil pada masa kini dan kelahiran berikutnya. Kondisi Made bukan hukuman yang tidak dapat diperbaiki, dan Wayan tidak otomatis selalu beruntung.</div>
+<h4>E. Salah paham yang sering terjadi</h4>
+<ul>
+<li><b>“Orang curang tampak sukses, berarti karmaphala tidak ada.”</b> Keliru. Hasil karma tidak selalu diterima seketika; kesuksesan sekarang dapat berasal dari karma baik terdahulu, sedangkan perbuatan curang sekarang tetap akan berbuah.</li>
+<li><b>“Semua sudah ditakdirkan, jadi usaha tidak penting.”</b> Keliru. Kriyamana membuktikan bahwa perbuatan kita sekarang ikut menentukan masa depan.</li>
+<li><b>“Sumbangan besar menghapus korupsi.”</b> Keliru. Karma buruk tidak dapat ditebus dengan sumbangan semata; perbuatan buruk harus dihentikan dan diganti dengan subha karma.</li>
+<li><b>“Sudah terlambat memperbaiki diri.”</b> Keliru. Sikap terbaik: menyadari kekeliruan, berhenti berbuat asubha karma, dan memperbanyak subha karma mulai sekarang.</li>
+</ul>
+<h4>F. Tujuan akhir: moksa</h4>
+<p>Atma yang masih terikat karma akan lahir kembali, berbuat lagi, menerima hasil, dan samsara berulang. Agar siklus berakhir, seseorang <b>berbuat sesuai dharma tanpa terikat pada hasilnya</b> sehingga karma tidak lagi mengikat dan <b>moksa</b> (kebebasan atma dari samsara) tercapai. Bukan dengan berhenti bekerja, mengumpulkan harta, atau menyalahkan keadaan.</p>
+<div class="callout"><b class="t">Pesan Sarasamuscaya</b>Di antara semua makhluk, kelahiran sebagai <b>manusia</b> adalah yang paling utama karena manusia mampu membedakan perbuatan baik dan buruk serta menggunakan perbuatan baik untuk membebaskan diri dari penderitaan. Maka kelahiran sebagai manusia adalah <b>kesempatan</b> memperbaiki kualitas diri — bukan jaminan hidup selalu bahagia.</div>
+<div class="kw"><span>Punarbhawa</span><span>Samsara</span><span>Karmaphala</span><span>Subha / Asubha karma</span><span>Sancita</span><span>Prarabda</span><span>Kriyamana</span><span>Tri Kaya Parisudha</span><span>Moksa</span></div>
+`},
+{id:'t4',title:'4. Catur Warna, Asrama & Purusa Artha',html:`
+<span class="kicker">Topik 4</span>
+<h3 style="margin-top:2px">Catur Warna, Catur Asrama, dan Catur Purusa Artha</h3>
+<h4>A. Catur Warna: dasar pembagian</h4>
+<div class="sloka">“Catur varnam mayā srstam guna-karma-vibhāgaśah.”<small>(Bhagawadgita IV.13) Empat warna Aku ciptakan menurut pembagian guna (sifat/bakat) dan karma (pekerjaan).</small></div>
+<p><b>Catur Warna</b> adalah empat golongan fungsi dalam masyarakat yang dibagi berdasarkan <b>guna (bakat dan sifat)</b> dan <b>karma (pekerjaan)</b>, <b>bukan</b> berdasarkan keturunan, kekayaan, gelar, atau besarnya persembahan.</p>
+<div class="tblw"><table>
+<tr><th>Warna</th><th>Guna (sifat/bakat)</th><th>Swadharma pokok</th><th>Contoh</th></tr>
+<tr><td><b>Brahmana</b></td><td>Tenang, bijak, tekun belajar</td><td>Kerohanian, pendidikan, bimbingan ajaran Weda</td><td>Pandita, guru, rohaniwan</td></tr>
+<tr><td><b>Ksatria</b></td><td>Berani, tegas, pemimpin, adil</td><td>Melindungi masyarakat dan menegakkan keadilan melalui pemerintahan dan pertahanan</td><td>Kepala desa, pejabat, polisi, prajurit</td></tr>
+<tr><td><b>Waisya</b></td><td>Ulet, cermat, pandai mengelola</td><td>Ekonomi: bertani, beternak/melindungi ternak, berdagang (Bhagawadgita XVIII.44)</td><td>Petani, pedagang, pengusaha, pengelola keuangan dan pemasaran</td></tr>
+<tr><td><b>Sudra</b></td><td>Terampil, tekun, setia</td><td>Pelayanan melalui tenaga dan keterampilan</td><td>Tukang, pekerja, karyawan, tenaga jasa hotel</td></tr>
+</table></div>
+<h4>B. Catur Warna ≠ sistem kasta</h4>
+<div class="tblw"><table>
+<tr><th>Catur Warna</th><th>Sistem kasta</th></tr>
+<tr><td>Berdasarkan <b>guna dan karma</b></td><td>Berdasarkan <b>keturunan</b> (kelahiran)</td></tr>
+<tr><td>Dapat berubah sesuai guna dan karma</td><td>Dianggap tetap seumur hidup</td></tr>
+<tr><td>Antarwarna <b>saling melengkapi</b>, martabat setara</td><td>Cenderung membedakan tinggi-rendah martabat</td></tr>
+</table></div>
+<p><b>Contoh:</b></p>
+<ul>
+<li>Ketut lahir di keluarga petani, tekun belajar, tenang, bijak, dan menjadi guru di daerah terpencil → <b>Brahmana</b> (karena guna dan karmanya sebagai pendidik, bukan keturunan orang tuanya).</li>
+<li>Pak Wayan pensiunan prajurit yang membuka usaha kuliner dan mengelola keuangan serta pemasaran → kegiatannya kini mencerminkan <b>Waisya</b> (warna mengikuti guna dan karma, bukan masa lalu).</li>
+<li>Anak seorang pendeta yang malas belajar dan tidak menjalankan swadharma kerohanian <b>tidak otomatis</b> Brahmana.</li>
+</ul>
+<h4>C. Saling melengkapi</h4>
+<p>Pembangunan balai banjar: pandita memberi petunjuk waktu dan tata nilai (<b>Brahmana</b>), kepala desa memimpin dan menjaga keamanan (<b>Ksatria</b>), pengusaha dan petani menyumbang dana dan bahan (<b>Waisya</b>), tukang dan pekerja membangun fisik (<b>Sudra</b>). Tanpa salah satunya pekerjaan tidak lengkap. Bukti nyata: desa yang membagi tugas berdasarkan keahlian dan kesediaan warga menyelesaikan proyek tepat waktu dan harmonis, sedangkan desa yang membagi berdasarkan gelar keturunan sering tertunda dan berselisih. <b>Keharmonisan lebih mudah dicapai bila peran dibagi berdasarkan guna dan karma serta saling melengkapi.</b></p>
+<h4>D. Catur Asrama</h4>
+<p><b>Catur Asrama</b> adalah empat tahap kehidupan manusia:</p>
+<div class="tblw"><table>
+<tr><th>Asrama</th><th>Tahap</th><th>Fokus</th></tr>
+<tr><td><b>Brahmacari</b></td><td>Masa menuntut ilmu</td><td>Belajar, berdisiplin, menghormati guru dan orang tua (kamu sekarang di sini!)</td></tr>
+<tr><td><b>Grhasta</b></td><td>Masa berumah tangga</td><td>Memenuhi <b>artha dan kama</b> secara sah berlandaskan dharma</td></tr>
+<tr><td><b>Wanaprasta</b></td><td>Masa mengurangi keterikatan duniawi</td><td>Membimbing masyarakat, memperdalam spiritual</td></tr>
+<tr><td><b>Bhiksuka</b></td><td>Masa pengabdian total</td><td>Melepaskan ikatan duniawi, mengejar moksa</td></tr>
+</table></div>
+<h4>E. Catur Purusa Artha</h4>
+<p><b>Catur Purusa Artha</b> adalah empat tujuan hidup manusia: <b>Dharma</b> (kebenaran), <b>Artha</b> (kekayaan/sarana materi), <b>Kama</b> (keinginan/kenikmatan yang wajar), dan <b>Moksa</b> (kebebasan tertinggi). Dharma menjadi dasar; artha dan kama dikejar berlandaskan dharma; moksa menjadi tujuan akhir.</p>
+<div class="callout jade"><b class="t">Keterkaitan Catur Warna dan Catur Purusa Artha</b>Setiap warna melaksanakan <b>swadharma</b> sebagai sarana memperoleh artha dan kama berlandaskan dharma untuk mencapai moksa. Tidak ada warna yang dilarang mengejar tujuan hidup ini: bukan hanya Brahmana yang boleh mengejar moksa, dan Waisya pun wajib memperhatikan dharma.</div>
+<div class="kw"><span>Guna</span><span>Karma</span><span>Swadharma</span><span>Brahmana</span><span>Ksatria</span><span>Waisya</span><span>Sudra</span><span>Brahmacari</span><span>Grhasta</span><span>Dharma–Artha–Kama–Moksa</span></div>
+`},
+{id:'t5',title:'5. Rangkuman Kilat',html:`
+<span class="kicker">Topik 5</span>
+<h3 style="margin-top:2px">Rangkuman Kilat</h3>
+<p>Baca ulang peta konsep ini sebelum melanjutkan petualangan.</p>
+<div class="tblw"><table>
+<tr><th>Materi</th><th>Inti yang wajib kamu ingat</th></tr>
+<tr><td><b>Dharmasastra</b></td><td>Manawa Dharmasastra = Smrti, kitab hukum oleh Maharsi Manu; pedoman hukum dan tata nilai bagi seluruh umat; bagian: Acara, Wyawahara, Prayascita.</td></tr>
+<tr><td><b>Catur Yuga</b></td><td>Krta–tapa, Treta–jnana, Dwapara–yajna, Kali–dana. Dharma berkurang ¼ tiap yuga; justru menuntut kita giat berdharma lewat hal yang dapat dilakukan.</td></tr>
+<tr><td><b>Sumber hukum</b></td><td>Sruti (utama) → Smrti → Sila → Acara → Atmanastuti. Semua harus selaras dengan Weda/dharma. Sengketa → paruman (wyawahara), Dharmasastra, awig-awig, keadilan.</td></tr>
+<tr><td><b>Punarbhawa</b></td><td>Kelahiran kembali atma ke badan baru; atma kekal, badan berganti (Bhagawadgita II.22).</td></tr>
+<tr><td><b>Karmaphala</b></td><td>Sancita (benih masa lampau), Prarabda (yang sedang dinikmati), Kriyamana (yang dilakukan sekarang). Tidak fatalistik; subha karma diperbanyak; tidak bisa “ditebus” sumbangan semata.</td></tr>
+<tr><td><b>Tri Kaya Parisudha</b></td><td>Manacika (pikiran), Wacika (ucapan), Kayika (perbuatan).</td></tr>
+<tr><td><b>Moksa</b></td><td>Berbuat sesuai dharma tanpa terikat hasil → bebas dari samsara.</td></tr>
+<tr><td><b>Catur Warna</b></td><td>Berdasar guna dan karma (Bhagawadgita IV.13), bukan keturunan; Brahmana–Ksatria–Waisya–Sudra saling melengkapi; martabat setara.</td></tr>
+<tr><td><b>Catur Asrama</b></td><td>Brahmacari → Grhasta (artha &amp; kama sesuai dharma) → Wanaprasta → Bhiksuka.</td></tr>
+<tr><td><b>Catur Purusa Artha</b></td><td>Dharma, Artha, Kama, Moksa.</td></tr>
+</table></div>
+<div class="callout"><b class="t">Tips petualang</b>Di Tahap 4 setiap soal hanya punya waktu <b>2 menit</b>, dan di Tahap 5 jawabanmu akan dinilai. Soal-soalnya berbentuk kasus dan analisis, jadi pahami <b>alasannya</b>, bukan sekadar menghafal.</div>
+`}
+];
+
+/* =====================================================================
+   SKENARIO TAHAP 3
+   ===================================================================== */
+const SKENARIO = [
+{ judul:'Di Sekolah – Kunci Jawaban Kiriman', tag:['Tri Kaya Parisudha','Karmaphala','Kriyamana'],
+  situasi:'Besok ada ulangan harian PAH. Malam ini seorang teman mengirimkan foto kunci jawaban ke grup kelas dan berkata, “Salin saja, nilai aman!” Kamu belum selesai belajar.',
+  pil:['Menyalin kunci jawaban itu supaya nilai aman.','Menolak dengan sopan, belajar dengan kemampuan sendiri, dan mengevaluasi bagian yang belum dipahami.','Meneruskan kunci jawaban itu ke teman-teman lain supaya semua adil.'], k:1,
+  fb:'Menyontek adalah asubha karma lewat pikiran, ucapan, dan perbuatan (Tri Kaya Parisudha). Setiap perbuatanmu sekarang adalah kriyamana karma yang menjadi benih bagi masa depanmu. Belajar jujur memperbanyak subha karma dan melatih diri sebagai Brahmacari.' },
+{ judul:'Di Rumah – Antara Gim dan Gotong Royong', tag:['Brahmacari','Subha karma','Kayika'],
+  situasi:'Sore hari kamu asyik bermain gim. Ibu sedang menyiapkan sarana upacara untuk persembahyangan purnama dan meminta bantuanmu membersihkan halaman pura keluarga.',
+  pil:['Pura-pura tidak mendengar dan melanjutkan bermain.','Membantu sambil menggerutu agar Ibu tahu kamu terpaksa.','Membantu dengan tulus lebih dulu, lalu melanjutkan bermain pada waktu yang tersisa.'], k:2,
+  fb:'Membantu dengan tulus adalah subha karma melalui pikiran, ucapan, dan perbuatan. Sebagai Brahmacari kamu juga belajar menghormati orang tua dan mengatur waktu. Perbuatan baik yang dilakukan dengan terpaksa dan menggerutu kehilangan ketulusannya.' },
+{ judul:'Di Banjar – Dana Punia untuk Ruang Belajar', tag:['Kali Yuga: Dana','Acara','Ngayah'],
+  situasi:'Teruna-teruni banjar mengumpulkan dana punia untuk membangun ruang belajar bagi anak-anak kurang mampu. Uang sakumu terbatas dan kamu merasa tidak bisa ikut berdana.',
+  pil:['Tidak ikut sama sekali karena tidak punya banyak uang.','Berpartisipasi sesuai kemampuan: dana punia sebesar yang ikhlas, ngayah tenaga, atau menyumbang ide dan desain poster.','Ikut menyumbang hanya jika namanya diumumkan di depan semua warga.'], k:1,
+  fb:'Dana adalah dharma utama di Kali Yuga dan dapat dilakukan siapa saja sesuai kemampuan; bentuknya bisa harta, ilmu, atau tenaga. Ngayah termasuk Acara yang baik. Berdana demi pujian mengurangi ketulusan.' },
+{ judul:'Di Dunia Digital – Jari yang Berwacika', tag:['Wacika','Karmaphala','Satya & Ahimsa'],
+  situasi:'Di grup percakapan angkatan beredar kabar bohong yang mempermalukan seorang teman. Banyak yang mulai membagikannya dan memberi komentar kasar.',
+  pil:['Ikut membagikan supaya terlihat aktif dan tidak ketinggalan.','Mengecek kebenarannya, tidak ikut menyebarkan, dan mengingatkan dengan bahasa santun.','Membalas semua pelaku dengan hinaan yang lebih keras.'], k:1,
+  fb:'Wacika berlaku juga di dunia digital: berkata benar dan santun. Menyebar kabar bohong atau menghina adalah asubha karma yang hasilnya dapat kembali kepadamu. Membela kebenaran dengan cara baik menunjukkan nilai satya dan ahimsa.' },
+{ judul:'Cita-Cita – Guna dan Karma', tag:['Catur Warna','Swadharma','Catur Purusa Artha'],
+  situasi:'Kamu bercita-cita menjadi dokter. Seorang teman berkata, “Orang tuamu petani, jadi kamu tidak akan bisa jadi dokter. Pekerjaan itu sudah ditentukan oleh keturunan.”',
+  pil:['Setuju, karena keturunan menentukan pekerjaan seseorang.','Menjelaskan bahwa warna dilihat dari guna dan karma, lalu terus mengembangkan bakat dan belajar sambil tetap menghormati semua profesi.','Merasa minder dan berhenti bercita-cita.'], k:1,
+  fb:'Menurut Bhagawadgita IV.13, pembagian warna didasarkan pada guna dan karma, bukan keturunan. Semua profesi saling melengkapi dan setara martabatnya. Dengan swadharma yang dijalankan sesuai dharma, setiap orang dapat mengejar artha, kama, hingga moksa.' }
+];
+
+/* =====================================================================
+   UTILITAS & STATE
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LTR = 'ABCDE';
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const fmt = s => { s = Math.max(0, Math.round(s)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
+const uid = () => Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+
+let S = load() || fresh();
+let view = null, tick = null;
+function fresh() { return { stage: 1, id: uid(), nama: '', kelas: '', absen: '', mulai: null, selesai: null, t2Sisa: CFG.T2_DETIK, t3: {}, komitmen: '', t4: null, t5: null, away: 0, kirim: 'belum', hasil: null }; }
+function load() { try { const j = localStorage.getItem(STORE_KEY); return j ? JSON.parse(j) : null; } catch (e) { return null; } }
+function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {} }
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 2600); }
+function stopTick() { if (tick) { clearInterval(tick); tick = null; } }
+function modal(html, onReady) { const r = $('#ovRoot'); if (!html) { r.innerHTML = ''; return; } r.innerHTML = `<div class="ov" role="dialog" aria-modal="true"><div class="box">${html}</div></div>`; if (onReady) onReady(r); return () => { r.innerHTML = ''; }; }
+function ring(id, frac, label, sub, warn) { const R = 44, C = 2 * Math.PI * R; return `<div class="ring ${warn ? 'warn' : ''}" id="${id}"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="bg" cx="50" cy="50" r="${R}"/><circle class="fg" cx="50" cy="50" r="${R}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - frac)).toFixed(1)}" transform="rotate(-90 50 50)"/></svg><div class="rt"><b>${label}</b><small>${sub}</small></div></div>`; }
+function setRing(id, frac, label, warn) { const r = $('#' + id); if (!r) return; r.classList.toggle('warn', !!warn); const C = 2 * Math.PI * 44; r.querySelector('.fg').setAttribute('stroke-dashoffset', (C * (1 - frac)).toFixed(1)); r.querySelector('b').textContent = label; }
+
+const ICON_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+const ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+const LOTUS = '<svg viewBox="0 0 32 32"><g fill="#f3b94d" stroke="#7a3b0c" stroke-width="1"><path d="M16 4c3 4 3 9 0 14-3-5-3-10 0-14z"/><path d="M6 10c5 0 9 3 10 8-5 0-9-3-10-8z"/><path d="M26 10c-5 0-9 3-10 8 5 0 9-3 10-8z"/></g><path d="M4 22c4 4 20 4 24 0" fill="none" stroke="#21634f" stroke-width="2.2" stroke-linecap="round"/></svg>';
+const STAGES = [
+  ['Gerbang Jati Diri', 'Identitas'], ['Hutan Pustaka', 'Materi'], ['Desa Dharma', 'Penerapan'], ['Bukit Ujian', 'Uji Paham'], ['Puncak Moksa', 'Asesmen']
+];
+
+/* ---------- penilaian ---------- */
+function benarPG(q, a) { return a === q.k; }
+function benarPGK(q, a) { if (!Array.isArray(a)) return false; const x = a.slice().sort().join(), y = q.k.slice().sort().join(); return x === y; }
+function cek(id, a) { const q = BANK[id]; return q.type === 'pgk' ? benarPGK(q, a) : benarPG(q, a); }
+function skorT4() { const t = S.t4; if (!t) return { b: 0, n: 0, salah: [] }; const salah = []; let b = 0; t.items.forEach(it => { if (cek(it.id, t.ans[it.id])) b++; else salah.push(it.id); }); return { b, n: t.items.length, salah }; }
+function skorT5() { const t = S.t5; if (!t) return { pg: 0, pgk: 0, b: 0, n: 0, salah: [] }; let pg = 0, pgk = 0; const salah = []; t.items.forEach(it => { const ok = cek(it.id, t.ans[it.id]); if (ok) { BANK[it.id].type === 'pgk' ? pgk++ : pg++; } else salah.push(it.id); }); return { pg, pgk, b: pg + pgk, n: t.items.length, salah }; }
+function poin() { let p = Math.min(S.stage - 1, 5) * 100; if (S.stage > 5) p = 500; if (S.t4 && S.t4.done) p += skorT4().b * 10; if (S.t5 && S.t5.done) p += skorT5().b * 10; return p; }
+function gelar(n) { return n >= 90 ? 'Wiku Dharma' : n >= 75 ? 'Pelita Dharma' : n >= 60 ? 'Penjelajah Dharma' : 'Pejalan Pemula'; }
+
+/* ---------- HUD & PETA ---------- */
+function renderHud() {
+  const h = $('#hud');
+  if (!S.nama) { h.innerHTML = ''; return; }
+  h.innerHTML = `<span class="chip">👤 <b>${esc(S.nama)}</b> · ${esc(S.kelas)}</span><span class="chip">✨ Poin Dharma <b>${poin()}</b></span>`;
+}
+function renderMap() {
+  $('#map').innerHTML = STAGES.map((s, i) => {
+    const n = i + 1; const st = n < S.stage ? 'done' : n === S.stage ? 'cur' : 'lock';
+    const ic = st === 'done' ? ICON_OK : st === 'lock' ? ICON_LOCK : n;
+    return `<li><button class="node ${st} ${n === view ? 'view' : ''}" data-n="${n}" aria-label="Tahap ${n}: ${s[0]} – ${st === 'lock' ? 'terkunci' : st === 'done' ? 'selesai' : 'sedang berjalan'}"><span class="dot">${ic}</span><span class="lbl">${s[0]}<em>${s[1]}</em></span></button></li>`;
+  }).join('') ;
+  const pos = (Math.min(S.stage, 5) - .5) / 5;
+  const w = document.createElement('div'); w.className = 'walker'; w.id = 'walker'; w.innerHTML = LOTUS; w.style.left = 'calc(8px + (100% - 16px) * ' + pos.toFixed(3) + ')'; $('#map').appendChild(w);
+  document.querySelectorAll('.node').forEach(b => b.onclick = () => {
+    const n = +b.dataset.n;
+    if (n > S.stage) { toast('🔒 Tahap ' + n + ' masih terkunci. Selesaikan Tahap ' + S.stage + ' dulu.'); return; }
+    view = n; render();
+  });
+}
+
+/* =====================================================================
+   RENDER UTAMA
+   ===================================================================== */
+function render() {
+  stopTick();
+  const maxView = Math.min(S.stage, 5);
+  if (view == null || view > maxView) view = maxView;
+  renderHud(); renderMap();
+  const st = $('#stage');
+  if (view === 1) st.innerHTML = vT1();
+  else if (view === 2) st.innerHTML = vT2();
+  else if (view === 3) st.innerHTML = vT3();
+  else if (view === 4) st.innerHTML = vT4();
+  else if (view === 5) st.innerHTML = vT5();
+  bind(view);
+  window.scrollTo({ top: 0 });
+}
+
+/* ---------- TAHAP 1 ---------- */
+function vT1() {
+  if (S.stage > 1) {
+    return `<section class="card"><span class="kicker">Tahap 1 · selesai</span><h2>Gerbang Jati Diri</h2><p class="lead">Identitasmu sudah tercatat dan tidak dapat diubah.</p>
+    <div class="score"><div><b style="font-size:24px">${esc(S.nama)}</b><span>Nama</span></div><div><b>${esc(S.kelas)}</b><span>Kelas</span></div><div><b>${esc(S.absen)}</b><span>No. Absen</span></div></div>
+    <button class="btn gold" data-go="cur">Kembali ke tahap yang sedang berjalan →</button></section>`;
+  }
+  return `<section class="card">
+  <span class="kicker">Tahap 1 dari 5</span><h2>Gerbang Jati Diri</h2>
+  <p class="lead">Selamat datang, calon penjelajah dharma! Sebelum gerbang pertama terbuka, tuliskan identitasmu dengan benar. Hasil petualanganmu akan tercatat atas nama ini.</p>
+  <form id="f1" autocomplete="off" novalidate>
+    <label class="f" for="nama">Nama lengkap</label>
+    <input class="inp" id="nama" maxlength="60" placeholder="Ketik namamu secara manual" value="${esc(S.nama)}">
+    <label class="f" id="lk">Kelas</label>
+    <div class="classes" role="radiogroup" aria-labelledby="lk">
+      ${CFG.KELAS.map(k => `<span><input type="radio" name="kelas" id="k_${k}" value="${k}" ${S.kelas === k ? 'checked' : ''}><label for="k_${k}">${k}</label></span>`).join('')}
+    </div>
+    <label class="f" for="absen">Nomor absen</label>
+    <input class="inp" id="absen" inputmode="numeric" maxlength="2" placeholder="Contoh: 12" style="max-width:160px" value="${esc(S.absen)}">
+    <div class="err" id="err" role="alert"></div>
+    <div class="callout"><b class="t">Aturan petualangan</b>
+      Tahap dikerjakan <b>berurutan</b> dan terkunci sampai tahap sebelumnya selesai. Kemajuanmu tersimpan di perangkat ini, jadi jika halaman tertutup kamu dapat melanjutkan. Kerjakan dengan jujur.</div>
+    <button class="btn" type="submit">Buka Gerbang Pertama →</button>
+  </form></section>`;
+}
+
+/* ---------- TAHAP 2 ---------- */
+let topikAktif = 't1', topikSeen = {};
+function vT2() {
+  const aktif = S.stage === 2;
+  const frac = aktif ? 1 - (S.t2Sisa / CFG.T2_DETIK) : 1;
+  const tb = aktif ? `<div class="timerbar">${ring('r2', S.t2Sisa / CFG.T2_DETIK, fmt(S.t2Sisa), 'tersisa')}<div class="txt"><b>Waktu belajar wajib ${Math.round(CFG.T2_DETIK / 60)} menit.</b> Tahap 3 terbuka setelah waktu habis. Penghitung berhenti sementara jika kamu berpindah tab atau jendela, jadi tetaplah di halaman ini.</div></div>` : `<div class="callout jade"><b class="t">Tahap selesai</b>Kamu membaca ulang materi. Waktu wajib sudah terpenuhi.</div>`;
+  const t = TOPIK.find(x => x.id === topikAktif) || TOPIK[0];
+  return `<section class="card"><span class="kicker">Tahap 2 dari 5</span><h2>Hutan Pustaka Suci</h2>
+  <p class="lead">Baca materi dengan teliti. Pelajari lima topik; tiap topik menandai ✓ setelah kamu membukanya.</p>
+  ${tb}
+  <div class="tabs" role="tablist">${TOPIK.map(x => `<button class="tab ${topikSeen[x.id] ? 'seen' : ''}" role="tab" aria-selected="${x.id === t.id}" data-t="${x.id}">${esc(x.title)}</button>`).join('')}</div>
+  <article id="mat">${t.html}</article>
+  <div class="row" style="margin-top:20px;justify-content:space-between">
+    <button class="btn ghost sm" id="prev">← Topik sebelumnya</button>
+    <button class="btn ghost sm" id="next">Topik berikutnya →</button>
+  </div>
+  <hr style="border:0;border-top:2px dashed var(--line);margin:24px 0">
+  ${aktif ? `<button class="btn gold" id="go3" disabled>🔒 Terbuka dalam ${fmt(S.t2Sisa)}</button>` : `<button class="btn gold" data-go="cur">Kembali ke tahap yang sedang berjalan →</button>`}
+  </section>`;
+}
+
+/* ---------- TAHAP 3 ---------- */
+function vT3() {
+  const aktif = S.stage === 3; const selesai = Object.keys(S.t3).length; const semua = selesai === SKENARIO.length;
+  return `<section class="card"><span class="kicker">Tahap 3 dari 5</span><h2>Desa Dharma</h2>
+  <p class="lead">Ajaran dharma hidup dalam keputusan sehari-hari. Bacalah lima situasi nyata dan pilih tindakan yang paling tepat. Pilihan ini bukan penilaian, tetapi latihan berpikir. <b>${selesai}/${SKENARIO.length} misi selesai.</b></p>
+  ${SKENARIO.map((s, i) => { const a = S.t3[i]; const done = a != null; return `<div class="sc ${done ? 'done' : ''}"><div class="hd"><span class="n">${done ? '✓' : i + 1}</span>${esc(s.judul)}</div><div class="bd">
+    <div class="tagrow">${s.tag.map(t => `<span>${esc(t)}</span>`).join('')}</div>
+    <p>${esc(s.situasi)}</p><p style="font-weight:800;margin-bottom:0">Apa yang kamu lakukan?</p>
+    ${s.pil.map((p, j) => { let c = ''; if (done) { c = j === s.k ? 'ok' : (j === a ? 'bad' : ''); } return `<button class="opt ${c}" data-sc="${i}" data-j="${j}" ${done || !aktif ? 'disabled' : ''}><span class="ltr">${LTR[j]}</span><span>${esc(p)}</span></button>`; }).join('')}
+    ${done ? `<div class="fb ${a === s.k ? 'ok' : 'bad'}">${a === s.k ? '✔ Pilihan bijak! ' : 'ℹ Pilihan terbaik adalah ' + LTR[s.k] + '. '}${esc(s.fb)}</div>` : ''}
+  </div></div>`; }).join('')}
+  ${semua ? `<h3>Komitmen Dharmaku</h3>
+    <p>Tuliskan satu perbuatan nyata (Tri Kaya Parisudha) yang akan kamu lakukan minggu ini sebagai penerapan materi.</p>
+    <textarea class="inp" id="komit" maxlength="400" placeholder="Contoh: Minggu ini aku akan mengerjakan ulangan dengan jujur, berkata santun kepada teman, dan ikut ngayah di banjar…" ${aktif ? '' : 'disabled'}>${esc(S.komitmen)}</textarea>
+    <div class="err" id="err3"></div>
+    ${aktif ? `<button class="btn gold" id="go4">Buka Tahap 4 →</button>` : `<button class="btn gold" data-go="cur">Kembali ke tahap yang sedang berjalan →</button>`}` : `<div class="callout"><b class="t">Terkunci</b>Selesaikan kelima misi untuk membuka kolom Komitmen Dharmaku dan Tahap 4.</div>`}
+  </section>`;
+}
+
+/* ---------- TAHAP 4 ---------- */
+function initT4() {
+  const pool = shuffle(PG).slice(0, CFG.T4_JUMLAH + CFG.T5_PG);   // 20 soal acak dari bank SAS
+  const o = q => ({ id: q.id, order: shuffle([0, 1, 2, 3, 4]) });
+  S.t4 = { items: pool.slice(0, CFG.T4_JUMLAH).map(o), idx: 0, ans: {}, qStart: {}, done: false };
+  S.t5pool = pool.slice(CFG.T4_JUMLAH).map(o);
+  save();
+}
+function vT4() {
+  if (S.stage > 4 || (S.t4 && S.t4.done)) {
+    const r = skorT4(); const nilai = Math.round(r.b / r.n * 100);
+    return `<section class="card"><span class="kicker">Tahap 4 dari 5 · selesai</span><h2>Bukit Ujian</h2>
+    <div class="score"><div><b>${r.b}/${r.n}</b><span>Jawaban benar</span></div><div><b>${nilai}</b><span>Nilai Tahap 4</span></div></div>
+    <p>${nilai >= 75 ? 'Hebat! Pemahamanmu sudah kokoh. Siapkan diri untuk puncak petualangan.' : 'Tidak apa-apa. Bacalah lagi rangkuman di Tahap 2 sebelum menaklukkan puncak.'}</p>
+    ${S.stage === 4 ? `<button class="btn gold" id="go5">Buka Tahap 5: Puncak Moksa →</button>` : `<button class="btn gold" data-go="cur">Kembali ke tahap yang sedang berjalan →</button>`}</section>`;
+  }
+  if (!S.t4) { return `<section class="card"><span class="kicker">Tahap 4 dari 5</span><h2>Bukit Ujian</h2>
+    <p class="lead">Uji seberapa kuat pemahamanmu sebelum puncak.</p>
+    <ul><li><b>${CFG.T4_JUMLAH} soal</b> pilihan ganda, diacak dari bank soal.</li><li>Setiap soal memiliki waktu <b>${CFG.T4_DETIK_PER_SOAL / 60} menit</b>. Jika waktu habis, soal dianggap salah dan langsung berlanjut.</li><li>Setelah menjawab, kunci langsung ditampilkan agar kamu belajar.</li><li>Soal tidak dapat diulang atau dilewati. Menyegarkan halaman tidak mengembalikan waktu.</li></ul>
+    <button class="btn" id="start4">Mulai Uji Pemahaman</button></section>`; }
+  const t = S.t4; const it = t.items[t.idx]; const q = BANK[it.id];
+  if (!t.qStart[it.id]) { t.qStart[it.id] = Date.now(); save(); }
+  const answered = it.id in t.ans; const a = t.ans[it.id];
+  const rem = Math.max(0, CFG.T4_DETIK_PER_SOAL - Math.floor((Date.now() - t.qStart[it.id]) / 1000));
+  const dots = t.items.map((x, i) => `<i class="${i === t.idx ? 'cur' : (x.id in t.ans ? (cek(x.id, t.ans[x.id]) ? 'ok' : 'bad') : '')}"></i>`).join('');
+  const last = t.idx === t.items.length - 1;
+  return `<section class="card"><div class="qhead"><div><span class="kicker">Tahap 4 · Soal ${t.idx + 1} dari ${t.items.length}</span><div class="dots" style="margin-top:8px">${dots}</div></div>
+    ${ring('r4', answered ? 0 : rem / CFG.T4_DETIK_PER_SOAL, fmt(rem), 'waktu', rem <= 20)}</div>
+    <div class="qtext">${esc(q.q)}</div>
+    <div class="opts">${it.order.map((oi, p) => { let c = ''; if (answered) { if (oi === q.k) c = 'ok'; else if (oi === a) c = 'bad'; } return `<button class="opt ${c}" data-oi="${oi}" ${answered ? 'disabled' : ''}><span class="ltr">${LTR[p]}</span><span>${esc(q.o[oi])}</span></button>`; }).join('')}</div>
+    ${answered ? `<div class="fb ${a === q.k ? 'ok' : 'bad'}">${a == null ? '⏰ Waktu habis. ' : a === q.k ? '✔ Tepat sekali! ' : '✘ Belum tepat. '}Jawaban yang benar: <b>${LTR[it.order.indexOf(q.k)]}</b>.</div>
+      <div class="row" style="margin-top:14px"><button class="btn gold right" id="nx4">${last ? 'Lihat hasil Tahap 4' : 'Soal berikutnya →'}</button></div>` : ''}
+  </section>`;
+}
+
+/* ---------- TAHAP 5 ---------- */
+function initT5() {
+  const pg = (S.t5pool || []).slice(0, CFG.T5_PG);
+  const pgk = shuffle(PGK).slice(0, CFG.T5_PGK).map(q => ({ id: q.id, order: shuffle([0, 1, 2, 3, 4]) }));
+  S.t5 = { items: pg.concat(pgk), idx: 0, ans: {}, start: Date.now(), done: false };
+  save();
+}
+function vT5() {
+  if (S.stage > 5 || (S.t5 && S.t5.done)) return vHasil();
+  if (!S.t5) return `<section class="card"><span class="kicker">Tahap 5 dari 5</span><h2>Puncak Moksa</h2>
+    <p class="lead">Asesmen formatif terakhir. Tunjukkan pemahamanmu!</p>
+    <ul><li><b>${CFG.T5_PG + CFG.T5_PGK} soal</b>: ${CFG.T5_PG} pilihan ganda dan ${CFG.T5_PGK} pilihan ganda kompleks.</li>
+    <li>Pada <b>pilihan ganda kompleks</b>, pilih <b>semua</b> jawaban yang benar. Nilai diberikan jika seluruh pilihanmu tepat.</li>
+    <li>Kamu boleh berpindah antarsoal dan mengubah jawaban sebelum menekan <b>Kirim Jawaban</b>.</li>
+    ${CFG.T5_BATAS_MENIT > 0 ? `<li>Batas waktu: <b>${CFG.T5_BATAS_MENIT} menit</b>.</li>` : ''}
+    <li>Hasil dikirim otomatis ke rekap guru.</li></ul>
+    <button class="btn" id="start5">Mulai Asesmen</button></section>`;
+  const t = S.t5; const it = t.items[t.idx]; const q = BANK[it.id]; const pgk = q.type === 'pgk'; const a = t.ans[it.id];
+  const nPG = t.items.filter(x => BANK[x.id].type === 'pg').length;
+  const sel = oi => pgk ? (Array.isArray(a) && a.includes(oi)) : a === oi;
+  const terjawab = t.items.filter(x => { const v = t.ans[x.id]; return Array.isArray(v) ? v.length : v != null; }).length;
+  const batas = CFG.T5_BATAS_MENIT > 0;
+  return `<section class="card"><div class="qhead"><div><div class="sect">${pgk ? 'Pilihan ganda kompleks' : 'Pilihan ganda'}</div><span class="kicker">Soal ${t.idx + 1} dari ${t.items.length} · terjawab ${terjawab}</span></div>
+    ${batas ? ring('r5', 1, '--:--', 'sisa waktu') : ''}</div>
+    <div class="qtext">${esc(q.q)}</div>
+    ${pgk ? '<div class="hint">Pilih SEMUA jawaban yang benar.</div>' : ''}
+    <div class="opts">${it.order.map((oi, p) => `<button class="opt ${pgk ? 'multi' : ''} ${sel(oi) ? 'sel' : ''}" data-oi="${oi}" aria-pressed="${sel(oi)}"><span class="ltr">${sel(oi) && pgk ? '✓' : LTR[p]}</span><span>${esc(q.o[oi])}</span></button>`).join('')}</div>
+    <div class="row" style="margin-top:18px"><button class="btn ghost sm" id="pv5" ${t.idx === 0 ? 'disabled' : ''}>← Sebelumnya</button>
+      <button class="btn ghost sm" id="nx5" ${t.idx === t.items.length - 1 ? 'disabled' : ''}>Berikutnya →</button>
+      <button class="btn gold right" id="fin5">Kirim Jawaban</button></div>
+    <div class="navgrid" aria-label="Navigasi soal">${t.items.map((x, i) => { const v = t.ans[x.id]; const an = Array.isArray(v) ? v.length : v != null; return `<button data-i="${i}" class="${i === t.idx ? 'cur' : an ? 'ans' : ''}" aria-label="Soal ${i + 1}${an ? ' terjawab' : ''}">${i + 1}</button>`; }).join('')}</div>
+  </section>`;
+}
+
+/* ---------- HASIL ---------- */
+function vHasil() {
+  const h = S.hasil || hitungHasil();
+  const st = S.kirim;
+  const stHtml = GURU ? '<div class="status wait">Mode uji coba: hasil tidak dikirim ke Google Sheets.</div>'
+    : st === 'terkirim' ? '<div class="status ok">✔ Hasilmu sudah terkirim ke rekap guru. Kode bukti: <b>' + esc(S.id) + '</b></div>'
+    : st === 'tidak-pasti' ? '<div class="status wait">⏳ Hasil dikirim, tetapi konfirmasi belum diterima. Catat kode bukti <b>' + esc(S.id) + '</b> dan tunjukkan nilai ini kepada guru. <button class="btn sm" id="rk">Kirim ulang</button></div>'
+    : st === 'belum-diatur' ? '<div class="status bad">Alamat Google Sheets belum diatur oleh guru. Foto layar ini sebagai bukti dan tunjukkan kepada guru.</div>'
+    : st === 'mengirim' ? '<div class="status wait">⏳ Mengirim hasil…</div>'
+    : '<div class="status bad">✘ Hasil belum terkirim (koneksi bermasalah). <button class="btn sm" id="rk">Coba kirim lagi</button><br><small>Jangan tutup halaman ini sebelum berhasil. Kode bukti: <b>' + esc(S.id) + '</b></small></div>';
+  const salahList = CFG.TAMPILKAN_PEMBAHASAN ? [...(h.salah4 || []), ...(h.salah5 || [])] : [];
+  const rev = salahList.length ? `<details><summary>Lihat soal yang masih keliru (${salahList.length})</summary>${[['4', h.salah4], ['5', h.salah5]].map(([tp, ids]) => (ids || []).map(id => { const q = BANK[id]; const ans = (tp === '4' ? S.t4 : S.t5).ans[id]; const lab = v => v == null || (Array.isArray(v) && !v.length) ? '(tidak dijawab)' : Array.isArray(v) ? v.map(x => q.o[x]).join('; ') : q.o[v]; return `<div class="rev"><b>Tahap ${tp}:</b> ${esc(q.q).replace(/\n/g, '<br>')}<br><span class="a">Jawabanmu: ${esc(lab(ans))}</span><br><span class="k">Kunci: ${esc(lab(q.k))}</span></div>`; }).join('')).join('')}</details>` : '';
+  return `<section class="card"><span class="kicker">Petualangan selesai</span><h2>Puncak Moksa Tercapai 🌄</h2>
+  <div class="badge"><div class="t">${gelar(h.nilai5)}</div><div>${esc(S.nama)} · ${esc(S.kelas)} · No. ${esc(S.absen)}</div></div>
+  <div class="score"><div><b>${h.nilai4}</b><span>Nilai Tahap 4 (${h.b4}/${h.n4})</span></div><div><b>${h.nilai5}</b><span>Nilai Tahap 5 (${h.b5}/${h.n5})</span></div><div><b>${h.rata}</b><span>Rata-rata</span></div><div><b>${poin()}</b><span>Poin Dharma</span></div></div>
+  <p>Rincian Tahap 5: pilihan ganda <b>${h.b5pg}</b> benar, pilihan ganda kompleks <b>${h.b5pgk}</b> benar. Durasi total petualangan: <b>${h.durasi} menit</b>.</p>
+  ${stHtml}${rev}
+  <div class="row" style="margin-top:16px"><button class="btn ghost sm" id="salin">Salin ringkasan hasil</button>${GURU ? '<button class="btn ghost sm" id="rst">Ulangi (mode guru)</button>' : '<button class="btn ghost sm" id="baru">Murid lain di perangkat ini</button>'}</div>
+  </section>`;
+}
+function hitungHasil() {
+  const a = skorT4(), b = skorT5();
+  const n4 = a.n, n5 = b.n;
+  const nilai4 = Math.round(a.b / n4 * 100), nilai5 = Math.round(b.b / n5 * 100);
+  S.selesai = S.selesai || Date.now();
+  return { b4: a.b, n4, nilai4, salah4: a.salah, b5: b.b, n5, nilai5, b5pg: b.pg, b5pgk: b.pgk, salah5: b.salah, rata: Math.round((nilai4 + nilai5) / 2), durasi: Math.max(1, Math.round((S.selesai - S.mulai) / 60000)) };
+}
+
+/* =====================================================================
+   PENGIKAT EVENT
+   ===================================================================== */
+function bind(v) {
+  document.querySelectorAll('[data-go="cur"]').forEach(b => b.onclick = () => { view = Math.min(S.stage, 5); render(); });
+  if (v === 1 && S.stage === 1) {
+    $('#f1').onsubmit = e => {
+      e.preventDefault();
+      const nama = $('#nama').value.replace(/\s+/g, ' ').trim(); const k = (document.querySelector('input[name=kelas]:checked') || {}).value; const ab = $('#absen').value.trim();
+      const er = $('#err');
+      if (nama.length < 3) { er.textContent = 'Nama lengkap minimal 3 huruf.'; $('#nama').focus(); return; }
+      if (!k) { er.textContent = 'Pilih kelasmu (X-A sampai X-H).'; return; }
+      if (!/^\d{1,2}$/.test(ab) || +ab < 1) { er.textContent = 'Nomor absen harus berupa angka 1–99.'; $('#absen').focus(); return; }
+      modal(`<h3>Periksa identitasmu</h3><p><b>${esc(nama)}</b><br>Kelas ${esc(k)} · No. absen ${esc(ab)}</p><p>Setelah gerbang dibuka, identitas tidak dapat diubah. Sudah benar?</p><div class="row"><button class="btn ghost sm" id="mn">Periksa lagi</button><button class="btn gold sm right" id="my">Sudah benar</button></div>`, r => {
+        r.querySelector('#mn').onclick = () => modal('');
+        r.querySelector('#my').onclick = () => { modal(''); Object.assign(S, { nama, kelas: k, absen: ab, stage: 2, mulai: Date.now() }); save(); view = 2; render(); toast('🔓 Gerbang pertama terbuka!'); };
+      });
+    };
+  }
+  if (v === 2) bind2();
+  if (v === 3) bind3();
+  if (v === 4) bind4();
+  if (v === 5) bind5();
+  if (v === 5 && S.stage > 5) bindHasil();
+}
+
+function bind2() {
+  const show = id => { topikAktif = id; topikSeen[id] = true; const t = TOPIK.find(x => x.id === id); $('#mat').innerHTML = t.html; document.querySelectorAll('.tab').forEach(b => { b.setAttribute('aria-selected', b.dataset.t === id); b.classList.toggle('seen', !!topikSeen[b.dataset.t]); }); $('#mat').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+  topikSeen[topikAktif] = true; document.querySelectorAll('.tab').forEach(b => { b.classList.toggle('seen', !!topikSeen[b.dataset.t]); b.onclick = () => show(b.dataset.t); });
+  const idx = () => TOPIK.findIndex(x => x.id === topikAktif);
+  $('#prev').onclick = () => { if (idx() > 0) show(TOPIK[idx() - 1].id); else toast('Ini topik pertama.'); };
+  $('#next').onclick = () => { if (idx() < TOPIK.length - 1) show(TOPIK[idx() + 1].id); else toast('Ini topik terakhir.'); };
+  if (S.stage !== 2) return;
+  let n = 0;
+  tick = setInterval(() => {
+    if (document.hidden) return;                // hanya menghitung saat halaman terlihat
+    S.t2Sisa = Math.max(0, S.t2Sisa - 1); if (++n % 5 === 0) save();
+    setRing('r2', S.t2Sisa / CFG.T2_DETIK, fmt(S.t2Sisa), S.t2Sisa <= 60);
+    const b = $('#go3');
+    if (b) { if (S.t2Sisa > 0) b.textContent = '🔒 Terbuka dalam ' + fmt(S.t2Sisa); else { b.disabled = false; b.textContent = 'Buka Tahap 3: Desa Dharma →'; stopTick(); save(); toast('⏳ Waktu belajar selesai. Tahap 3 terbuka!'); } }
+  }, 1000);
+  const b = $('#go3'); if (S.t2Sisa <= 0) { b.disabled = false; b.textContent = 'Buka Tahap 3: Desa Dharma →'; stopTick(); }
+  b.onclick = () => { if (S.t2Sisa > 0) return; S.stage = 3; save(); view = 3; render(); toast('🔓 Tahap 3 terbuka!'); };
+}
+function bind3() {
+  document.querySelectorAll('.sc .opt').forEach(b => b.onclick = () => { if (S.stage !== 3) return; S.t3[+b.dataset.sc] = +b.dataset.j; save(); const y = window.scrollY; render(); window.scrollTo({ top: y }); });
+  const k = $('#komit'); if (k) k.oninput = () => { S.komitmen = k.value; save(); };
+  const g = $('#go4'); if (g) g.onclick = () => { if (S.komitmen.trim().length < 20) { $('#err3').textContent = 'Tulis komitmenmu minimal 20 karakter.'; return; } S.stage = 4; save(); view = 4; render(); toast('🔓 Tahap 4 terbuka!'); };
+}
+function bind4() {
+  const s = $('#start4'); if (s) s.onclick = () => { initT4(); render(); };
+  const g = $('#go5'); if (g) g.onclick = () => { S.stage = 5; save(); view = 5; render(); toast('🔓 Puncak Moksa terbuka!'); };
+  if (!S.t4 || S.t4.done) return;
+  const t = S.t4; const it = t.items[t.idx]; const q = BANK[it.id];
+  document.querySelectorAll('.opt').forEach(b => b.onclick = () => { if (it.id in t.ans) return; t.ans[it.id] = +b.dataset.oi; save(); const y = window.scrollY; render(); window.scrollTo({ top: y }); const f = $('.fb'); if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+  const nx = $('#nx4');
+  if (nx) nx.onclick = () => { if (t.idx < t.items.length - 1) { t.idx++; } else { t.done = true; } save(); render(); };
+  if (!(it.id in t.ans)) {
+    tick = setInterval(() => {
+      const rem = Math.max(0, CFG.T4_DETIK_PER_SOAL - Math.floor((Date.now() - t.qStart[it.id]) / 1000));
+      setRing('r4', rem / CFG.T4_DETIK_PER_SOAL, fmt(rem), rem <= 20);
+      if (rem <= 0) { t.ans[it.id] = null; save(); render(); toast('⏰ Waktu habis untuk soal ini'); }
+    }, 250);
+  }
+}
+function bind5() {
+  const s = $('#start5'); if (s) s.onclick = () => { initT5(); render(); };
+  if (!S.t5 || S.t5.done) return;
+  const t = S.t5; const it = t.items[t.idx]; const q = BANK[it.id];
+  document.querySelectorAll('.opts .opt').forEach(b => b.onclick = () => {
+    const oi = +b.dataset.oi;
+    if (q.type === 'pgk') { const cur = Array.isArray(t.ans[it.id]) ? t.ans[it.id].slice() : []; const i = cur.indexOf(oi); i > -1 ? cur.splice(i, 1) : cur.push(oi); t.ans[it.id] = cur; }
+    else t.ans[it.id] = oi;
+    save(); const y = window.scrollY; render(); window.scrollTo({ top: y });
+  });
+  document.querySelectorAll('.navgrid button').forEach(b => b.onclick = () => { t.idx = +b.dataset.i; save(); render(); });
+  $('#pv5').onclick = () => { if (t.idx > 0) { t.idx--; save(); render(); } };
+  $('#nx5').onclick = () => { if (t.idx < t.items.length - 1) { t.idx++; save(); render(); } };
+  $('#fin5').onclick = () => {
+    const kosong = t.items.filter(x => { const v = t.ans[x.id]; return Array.isArray(v) ? !v.length : v == null; }).length;
+    modal(`<h3>Kirim jawaban?</h3><p>${kosong ? `Masih ada <b>${kosong} soal</b> belum dijawab. ` : 'Semua soal sudah terjawab. '}Setelah dikirim, jawaban tidak dapat diubah.</p><div class="row"><button class="btn ghost sm" id="mn">Kembali</button><button class="btn gold sm right" id="my">Ya, kirim</button></div>`, r => {
+      r.querySelector('#mn').onclick = () => modal('');
+      r.querySelector('#my').onclick = () => { modal(''); selesaiT5(); };
+    });
+  };
+  if (CFG.T5_BATAS_MENIT > 0) {
+    const end = t.start + CFG.T5_BATAS_MENIT * 60000;
+    tick = setInterval(() => { const rem = Math.max(0, (end - Date.now()) / 1000); setRing('r5', rem / (CFG.T5_BATAS_MENIT * 60), fmt(rem), rem <= 120); if (rem <= 0) { stopTick(); toast('⏰ Waktu habis, jawaban dikirim otomatis'); selesaiT5(); } }, 500);
+  }
+}
+function selesaiT5() {
+  stopTick();
+  S.t5.done = true; S.selesai = Date.now(); S.hasil = hitungHasil(); S.stage = 6; save(); view = 5; render();
+  kirimHasil();
+}
+function bindHasil() {
+  const rk = $('#rk'); if (rk) rk.onclick = () => kirimHasil();
+  const sl = $('#salin'); if (sl) sl.onclick = () => { const h = S.hasil; const tx = `Petualangan Dharma – ${S.nama} (${S.kelas}/${S.absen})\nNilai Tahap 4: ${h.nilai4}\nNilai Tahap 5: ${h.nilai5}\nRata-rata: ${h.rata}\nKode bukti: ${S.id}`; (navigator.clipboard ? navigator.clipboard.writeText(tx) : Promise.reject()).then(() => toast('Ringkasan disalin'), () => toast('Salin manual: foto layar ini')); };
+  const bn = $('#baru'); if (bn) bn.onclick = () => modal(`<h3>Murid lain di perangkat ini?</h3><p>Data lokal perangkat akan dibersihkan. Hasil yang sudah terkirim tetap aman di rekap guru.${S.kirim !== 'terkirim' && !GURU ? '<br><b>Perhatian: hasilmu belum terkonfirmasi terkirim.</b>' : ''}</p><div class="row"><button class="btn ghost sm" id="mn">Batal</button><button class="btn sm right" id="my">Ya, mulai baru</button></div>`, r => { r.querySelector('#mn').onclick = () => modal(''); r.querySelector('#my').onclick = () => { try { localStorage.removeItem(STORE_KEY); } catch (e) {} location.href = location.pathname + (GURU ? '?guru=1' : ''); }; });
+  const rs = $('#rst'); if (rs) rs.onclick = () => { try { localStorage.removeItem(STORE_KEY); } catch (e) {} location.href = location.pathname + '?guru=1'; };
+}
+
+/* =====================================================================
+   PENGIRIMAN KE GOOGLE SHEETS (Apps Script Web App)
+   ===================================================================== */
+function payload() {
+  const h = S.hasil;
+  const bijak = SKENARIO.reduce((n, s, i) => n + (S.t3[i] === s.k ? 1 : 0), 0);
+  return { id: S.id, nama: S.nama, kelas: S.kelas, absen: S.absen, mulai: new Date(S.mulai).toISOString(), selesai: new Date(S.selesai).toISOString(), durasi: h.durasi, komitmen: S.komitmen, bijak,
+    t4Benar: h.b4, t4Nilai: h.nilai4, t4Salah: h.salah4.join(', '), t5Pg: h.b5pg, t5Pgk: h.b5pgk, t5Benar: h.b5, t5Nilai: h.nilai5, t5Salah: h.salah5.join(', '), rata: h.rata, away: S.away };
+}
+async function kirimHasil() {
+  if (GURU) { render(); return; }
+  if (!CFG.APPS_SCRIPT_URL || CFG.APPS_SCRIPT_URL.indexOf('PASTE_') === 0) { S.kirim = 'belum-diatur'; save(); render(); return; }
+  S.kirim = 'mengirim'; render();
+  const body = JSON.stringify(payload());
+  try {
+    const r = await fetch(CFG.APPS_SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body });
+    const j = await r.json();
+    S.kirim = j && j.ok ? 'terkirim' : 'gagal';
+  } catch (e1) {
+    try { await fetch(CFG.APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }); S.kirim = 'tidak-pasti'; }
+    catch (e2) { S.kirim = 'gagal'; }
+  }
+  save(); if (view === 5 || S.stage > 5) render();
+}
+
+/* pemantau pindah tab saat ujian */
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) return;
+  const ujian = (S.stage === 4 && S.t4 && !S.t4.done) || (S.stage === 5 && S.t5 && !S.t5.done);
+  if (ujian) { S.away = (S.away || 0) + 1; save(); }
+});
+
+/* mulai */
+if (S.stage > 5 && S.hasil && S.kirim === 'mengirim') S.kirim = 'gagal';
+render();
+</script>
+</body>
+</html>
